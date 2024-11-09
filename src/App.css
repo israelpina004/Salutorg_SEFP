@@ -9,5 +9,8 @@ body{font-family: "Rubik", sans-serif;}
 
 header .headerSearch{width: 60%; height: 60px; padding-top: 30px;}
 header .headerSearch input{background: white !important;outline: none !important;
-font-size: 14px; color: rgba(0,0,0,0.8); width: 60%; height: 30px;}
-header .headerSearch button{background: white; outline: none !important;}
+font-size: 14px; color: rgba(0,0,0,0.8); width: 65%; height: 35px;}
+header .headerSearch button{background: white; outline: none !important; height: 35px;}
+
+.login{width: 200px; color: #333333; z-index: 40; top: 20px; left: 0; border: 1px solid #dee2e6; box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);}
+.topMenuRight{font-size: 11px; color: #333333; padding: 0 0.5rem; height: 2rem;}
