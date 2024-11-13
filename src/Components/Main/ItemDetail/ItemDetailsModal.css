@@ -1,0 +1,69 @@
+.item-listing {
+  display: flex;
+  background-color: #e6e6e6;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 800px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+
+.item-image {
+  width: 150px;
+  height: 150px;
+  background-color: #333;
+  border-radius: 8px;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-right: 20px;
+}
+
+.item-details h2 {
+  font-size: 18px;
+  margin: 0;
+  padding-bottom: 8px;
+}
+
+.current-price {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.description {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.5;
+}
+
+.bid-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.top-bid,
+.deadline {
+  background-color: #d4a055;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.top-bid:hover,
+.deadline:hover {
+  background-color: #b88e47;
+}

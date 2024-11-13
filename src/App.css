@@ -1,59 +1,11 @@
-* {
-}
 @import url("https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap");
 
 body {
   font-family: "Rubik", sans-serif;
 }
-.bg-blue {
-  background: #034efc;
-}
 
-.headerWrapper .header {
-  width: 100%;
-  height: auto;
-  padding: 15px 0px;
-}
-.logoWrapper img {
-  width: 80px;
-}
-
-header .headerSearch {
-  width: 60%;
-  height: 60px;
-  padding-top: 30px;
-}
-header .headerSearch input {
-  background: white !important;
-  outline: none !important;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.8);
-  width: 65%;
-  height: 35px;
-}
-header .headerSearch button {
-  background: white;
-  outline: none !important;
-  height: 35px;
-}
-
-.login {
-  width: 200px;
-  color: #333333;
-  z-index: 40;
-  top: 20px;
-  left: 0;
-  border: 1px solid #dee2e6;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-}
-.topMenuRight {
-  font-size: 11px;
-  color: #333333;
-  padding: 0 0.5rem;
-  height: 2rem;
-}
 :root {
-  --page-grid-max-width: 1200px;
+  --page-grid-max-width: 1584px;
   --page-grid-outside-margins: 20px;
   --font-size: 16px;
 }
@@ -75,16 +27,7 @@ header .headerSearch button {
     --font-size: 12px;
   }
 }
-/* Applying the font size */
+
 body {
   font-size: var(--font-size);
-}
-
-.grid-container {
-  max-width: var(--page-grid-max-width);
-  padding-left: var(--page-grid-outside-margins);
-  padding-right: var(--page-grid-outside-margins);
-  margin: 0 auto; /* Center the container */
-  box-sizing: border-box; /* Ensure padding is included in the element's width */
-  background-color: #f0f0f0; /* Just an example background */
 }
