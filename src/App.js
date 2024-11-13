@@ -2,17 +2,18 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import './App.css';
 import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
 import Home from "./Pages/Home/home";
-import Header from "./Components/Header/header";
-import MainContent from "./Components/Main/MainContent";
+import Login from "./Pages/Login/login";
+import Register from "./Pages/Register/register"
 
 function App() {
   return (
     <>
     <BrowserRouter>
-      <Header />
-      <MainContent />
       <Routes>
-        <Route path = "/" exact={true} element={<Home/>} />
+        <Route index element={<Home />}></Route>
+        <Route path = "/home" element={<Home/>} />
+        <Route path = "/login" element={<Login />} />
+        <Route path = "/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
     </>

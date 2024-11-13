@@ -60,7 +60,9 @@ const Header =()=> {
                          <button type="button" className="icon-button"><IoMdSearch /></button>
                     </div>
                     <div className="nav-right">
-                        <span className="cart-nav-line">Account</span>
+                        <span className="cart-nav-line">
+                            <Link to="/login">Account</Link>
+                        </span>
                         <a id="nav-cart" href="ccccccart" aria-label="0 items in cart" aria-hidden="true">
                             <div className="cart-container">
                                 <span className="cart-nav-line">Cart</span>
