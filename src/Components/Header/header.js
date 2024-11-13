@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Logo2 from "../../Assets/Images/Logo2.png"
 import { IoMdSearch } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
