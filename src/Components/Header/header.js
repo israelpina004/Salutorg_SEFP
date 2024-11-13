@@ -11,7 +11,7 @@ import { Label } from "@mui/icons-material";
 const Header =()=> {
     return (
         <>
-            <div className="grid-container">
+            <div className="grid-container rounded-md">
                 <div className="header-container">
                     <div className="nav-left">
                         <a className="logo-icon" href="http://localhost:3000/">
