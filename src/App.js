@@ -1,18 +1,21 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import './App.css';
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
-import Home from "./Pages/Home"
-import Header from "./Components/Header";
-import MainLayout from "./Components/MainLayout";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./Pages/Home/home";
+import Login from "./Pages/Login/login";
+import Register from "./Pages/Register/register";
+import ApplicationSubmit from "./Pages/ApplicationSubmit/app-submitted"
 
 function App() {
   return (
     <>
     <BrowserRouter>
-      <MainLayout />
-      <Header />
       <Routes>
-        <Route path = "/" exact={true} element={<Home/>} />
+        <Route index element={<Home />}></Route>
+        <Route path = "/home" element={<Home/>} />
+        <Route path = "/login" element={<Login />} />
+        <Route path = "/register" element={<Register />} />
+        <Route path="/app-submitted" element={<ApplicationSubmit />} />
       </Routes>
     </BrowserRouter>
     </>
