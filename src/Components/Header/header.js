@@ -81,26 +81,26 @@ const Header =()=> {
                             <div class="menu-wrap" id="dropdownMenu">
                                 <ul class="menu">
                                     <li class="dropdown_item">
-                                        <FaUser className="me-2 icon" /> View Profile
+                                        <FaUser className="icon1" /> View Profile
                                     </li>
                                     <li class="dropdown_item">
-                                        <FaClipboardList className="me-2 icon" /> Purchases
+                                        <FaClipboardList className="icon2" /> Purchases
                                     </li>
                                     <li class="dropdown_item">
-                                        <FaStar className="me-2 icon" /> Review
+                                        <FaStar className="icon3" /> Review
                                     </li>
                                     <li class="dropdown_item">
-                                        <FaCog className="icon" /> 
+                                        <FaCog className="icon4" /> 
                                         <Link to = "/profile"> Account Settings </Link>
                                     </li>
                                     <li class="dropdown_item">
-                                        <FaEnvelopeOpenText className="icon" /> Contact Us
+                                        <FaEnvelopeOpenText className="icon5" /> Contact Us
                                     </li>
                                     <li class="dropdown_item">
                                         <button
                                             class="logout" onClick={handleSignOut}
                                         >
-                                        <FaSignOutAlt className="icon" /> Sign out
+                                        <FaSignOutAlt className="icon6" /> Sign out
                                         </button>
                                     </li>
                                 </ul> 
