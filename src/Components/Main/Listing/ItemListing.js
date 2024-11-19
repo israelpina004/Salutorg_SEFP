@@ -17,7 +17,7 @@ function ItemListing() {
       </div>
       <div className="item-details">
         <p className="item-title">Item Title</p>
-        <p className="item-price">$79.95</p>
+        <p className="item-price">$75.95</p>
         
         {/* Expanded content displayed only when isExpanded is true */}
         {/* {isExpanded && (

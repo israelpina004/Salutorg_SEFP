@@ -1,8 +1,10 @@
 import React from "react";
 import "./ItemDetailsModal.css";
+import Comments from "../../Comments/Comments";
 
 function ItemDetailsModal() {
   return (
+    <>
     <div className="item-listing">
       <div className="item-image">
         {/* Placeholder for the item image */}
@@ -19,6 +21,8 @@ function ItemDetailsModal() {
         <button className="deadline">Deadline: mm/dd/yy</button>
       </div>
     </div>
+    <Comments currentUserId="1"/>
+    </>
   );
 }
 

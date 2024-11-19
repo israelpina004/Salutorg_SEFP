@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import ItemListing from "./Listing/ItemListing";  
 import "./MainContent.css";  
 
@@ -9,7 +10,7 @@ const MainContent = () => {
                 <h1>Row #1</h1>
                 <div className="main-page-row">
                     
-                    <ItemListing />  
+                 <Link to="/item-details"><ItemListing /></Link> 
                     <ItemListing />
                     <ItemListing />
                     <ItemListing />

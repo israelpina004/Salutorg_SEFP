@@ -5,6 +5,7 @@ import Home from "./Pages/Home/home";
 import Login from "./Pages/Login/login";
 import Register from "./Pages/Register/register";
 import ApplicationSubmit from "./Pages/ApplicationSubmit/app-submitted"
+import ItemDetailsModal from "./Components/Main/ItemDetail/ItemDetailsModals";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path = "/login" element={<Login />} />
         <Route path = "/register" element={<Register />} />
         <Route path="/app-submitted" element={<ApplicationSubmit />} />
+        <Route path="item-details" element={<ItemDetailsModal/>}/>
       </Routes>
     </BrowserRouter>
     </>
