@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import Logo2 from "../../Assets/Images/Logo-5.svg"
 import Validation from "./validation"
-import { useEffect, useState } from "react";
-import ReCaptcha from "../../Components/ReCaptcha/recaptcha";
+import { useState } from "react";
+import ArithmeticBotChecker from "../../Components/ArithmeticBotCheck/bot-check";
+// import ReCaptcha from "../../Components/ReCaptcha/recaptcha";
 
 const Register=()=> {
    const [values, setValues] = useState({
@@ -10,15 +11,21 @@ const Register=()=> {
       username: '',
       password: ''
    })
-   const [token, setToken] = useState('')
+   
+   // Constants and functions used for setting up reCAPTCHA
+   // const [token, setToken] = useState('')
+
+   // useEffect(()=>{
+   //    if(token.length) {
+   //       setSubmitEnabled(true)
+   //    }
+   // }, [token])
+   // const handleToken = (token) => {
+   //    setToken(token)
+   // }
+   // const SITEKEY = "6Lf7V4QqAAAAAAWCTNqw61SEy4pBhEwQvGSnEhYI";
+
    const [submitEnabled, setSubmitEnabled] = useState(false)
-
-   useEffect(()=>{
-      if(token.length) {
-         setSubmitEnabled(true)
-      }
-   }, [token])
-
    const [errors, setErrors] = useState({})
    const handleInput = (event) => {
       setValues(prev => ({...prev, [event.target.name]: [event.target.value]}))
@@ -27,11 +34,11 @@ const Register=()=> {
       event.preventDefault();
       setErrors(Validation(values));
    }
-   const handleToken = (token) => {
-      setToken(token)
-   }
 
-   const SITEKEY = "6Lf7V4QqAAAAAAWCTNqw61SEy4pBhEwQvGSnEhYI";
+   // Helps check if the applicant's answer to the bot check is correct.
+   const handleValidAnswer = (isValid) => {
+      setSubmitEnabled(isValid);
+   }
 
    return (
       <>
@@ -62,8 +69,12 @@ const Register=()=> {
                      name="password" onChange={handleInput} style={{ width: '300px', padding: '10px' }} />
                      {errors.password && <span className="text-danger">{errors.password}</span>}
                   </div>
-                  <div>
+                  {/* Where the reCAPTCHA would go */}
+                  {/* <div>
                      <ReCaptcha sitekey={SITEKEY} callback={handleToken}/>
+                  </div> */}
+                  <div>
+                     <ArithmeticBotChecker onValidAnswer={handleValidAnswer} />
                   </div>
 
                   {/* When apply is clicked, should redirect to confirmation page (app-submitted.js) that application was submitted. */}
