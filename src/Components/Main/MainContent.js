@@ -1,29 +1,19 @@
-import React from "react";
-import ItemListing from "./Listing/ItemListing";  
 import "./MainContent.css";  
+import ItemCollection from "./Listing/itemCollection";  
+import ImageCarousel from "./ImageCarousel/imageCarousel";
 
 const MainContent = () => {
     return (
         <div className="main-content">
             <div className="main-page-container">
-                <h1>Row #1</h1>
-                <div className="main-page-row">
-                    
-                    <ItemListing />  
-                    <ItemListing />
-                    <ItemListing />
-                    <ItemListing />
-                    <ItemListing />
+                <ImageCarousel />
+                <div className="main-page-row">  
+                    <ItemCollection />
                 </div>
-                <h1>Row #2</h1>
-                <div className="main-page-row">
-                    
-                    <ItemListing />  
-                    <ItemListing />
-                    <ItemListing />
-                    <ItemListing />
-                    <ItemListing />
+                <div className="main-page-row">    
+                    <ItemCollection />  
                 </div>
+                
             </div>
         </div>
     );
