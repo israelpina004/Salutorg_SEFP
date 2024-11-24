@@ -1,13 +1,19 @@
 import { Link } from "react-router-dom";
 import { IoMdSearch } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
-import { FaShoppingCart } from "react-icons/fa";
+import {FaEnvelopeOpenText, FaShoppingCart, FaUser, FaClipboardList, FaStar, FaCog, FaSignOutAlt } from "react-icons/fa";
 import "./header.css";
 import { Label } from "@mui/icons-material";
-
-  
+import { useState } from "react";
 
 const Header =()=> {
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // Initially logged out; Set true for testing later!
+    
+    const handleSignOut = () => {
+        setIsLoggedIn(false);
+        alert("You've signed out. See you soon!")
+    };
+  
     return (
         <>
             <div className="grid-container rounded-md">
@@ -55,14 +61,54 @@ const Header =()=> {
                             </div>
                         </div>
                     </div>
+      
                     <div className="nav-middle">
                         <input className="nav-search" type="text" />
                          <button type="button" className="icon-button"><IoMdSearch /></button>
                     </div>
                     <div className="nav-right">
                         <span className="cart-nav-line">
-                            <Link to="/login">Account</Link>
+                        {!isLoggedIn ? (
+                            <Link to = "/login"> Sign In </Link> // When logged out, user can ONLY sign in
+                        ) : (
+                            <div class="dropdown">
+                            <div class="link">
+                            <span class="label">Account</span>
+                                <button type="button" class="caret">
+                                    <IoMdArrowDropdown/>
+                                </button>
+                            </div>
+                            <div class="menu-wrap" id="dropdownMenu">
+                                <ul class="menu">
+                                    <li class="dropdown_item">
+                                        <FaUser className="icon1" /> View Profile
+                                    </li>
+                                    <li class="dropdown_item">
+                                        <FaClipboardList className="icon2" /> Purchases
+                                    </li>
+                                    <li class="dropdown_item">
+                                        <FaStar className="icon3" /> Review
+                                    </li>
+                                    <li class="dropdown_item">
+                                        <FaCog className="icon4" /> 
+                                        <Link to = "/profile"> Account Settings </Link>
+                                    </li>
+                                    <li class="dropdown_item">
+                                        <FaEnvelopeOpenText className="icon5" /> Contact Us
+                                    </li>
+                                    <li class="dropdown_item">
+                                        <button
+                                            class="logout" onClick={handleSignOut}
+                                        >
+                                        <FaSignOutAlt className="icon6" /> Sign out
+                                        </button>
+                                    </li>
+                                </ul> 
+                            </div>
+                            </div>
+                        )}
                         </span>
+      
                         <a id="nav-cart" href="ccccccart" aria-label="0 items in cart" aria-hidden="true">
                             <div className="cart-container">
                                 <span className="cart-nav-line">Cart</span>
