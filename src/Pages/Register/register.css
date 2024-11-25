@@ -1,0 +1,89 @@
+/* Overall register page container */
+.register-container {
+  min-height: 100vh;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header section with logo */
+.register-header {
+  width: 100%;
+  padding: 16px;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+}
+
+.register-logo {
+  width: 120px;
+}
+
+/* Title section */
+.register-title {
+  width: 100%;
+  padding: 16px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: normal;
+}
+
+/* Form container */
+.register-form-container {
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #ccc;
+}
+
+.register-form {
+  width: 300px;
+}
+
+.register-input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Submit button */
+.register-submit-container {
+  padding: 16px 0;
+  text-align: center;
+}
+
+.register-submit-button {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.register-submit-button:hover {
+  background-color: #0056b3;
+}
+
+/* Redirect link for existing users */
+.register-login-redirect {
+  width: 100%;
+  padding: 16px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.register-login-redirect a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.register-login-redirect a:hover {
+  text-decoration: underline;
+}

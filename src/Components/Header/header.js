@@ -3,7 +3,6 @@ import { IoMdSearch } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
 import {FaEnvelopeOpenText, FaShoppingCart, FaUser, FaClipboardList, FaStar, FaCog, FaSignOutAlt } from "react-icons/fa";
 import "./header.css";
-import { Label } from "@mui/icons-material";
 import { useState } from "react";
 
 const Header =()=> {
@@ -93,7 +92,8 @@ const Header =()=> {
                                     </li>
                                     </li>
                                     <li class="dropdown_item">
-                                        <FaStar className="icon3" /> Review
+                                        <FaStar className="icon3" /> 
+                                        <Link to = "/listing"> Item Listing </Link>
                                     </li>
                                     <li class="dropdown_item">
                                         <FaCog className="icon4" /> 
@@ -115,7 +115,7 @@ const Header =()=> {
                         )}
                         </span>
       
-                        <a id="nav-cart" href="ccccccart" aria-label="0 items in cart" aria-hidden="true">
+                        <a id="nav-cart" href="/cart" aria-label="0 items in cart" aria-hidden="true">
                             <div className="cart-container">
                                 <span className="cart-nav-line">Cart</span>
                                 <button className="icon-button"><FaShoppingCart /></button>

@@ -4,35 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo2 from "../../Assets/Images/Logo-5.svg"
 // import Validation from "./validation"
 // import { useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 
 const Register=()=> {
-
-   // const [values, setValues] = useState ({
-   //    email: '',
-   //    username: '',
-   //    password: ''
-   // })
    
-   // const navigate = useNavigate();
-
-   // const [errors, setErrors] = useState({})
-   
-   // const handleInput = (event) => {
-   //    setValues(prev => ({...prev, [event.target.name]: [event.target.value]}))
-   // }
-
-   // const handleSubmit =(event)=> {
-   //    event.preventDefault();
-   //    setErrors(Validation(values));
-   //    if(errors.email === "" && errors.username === "" && errors.password === "") {
-   //       axios.post("(URL)", values)
-   //       .then(res => {navigate("/")})
-   //       .catch(err => console.log(err));
-   // }
-   // }
-
-   return (
+  return (
       
       <>
          <div id="RegisterPage" className="container-fluid min-vh-100 bg-white">
@@ -80,3 +56,4 @@ const Register=()=> {
 }
 
 export default Register;
+

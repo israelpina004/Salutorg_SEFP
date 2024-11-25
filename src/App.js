@@ -9,13 +9,18 @@ import Purchases from "./Pages/Purchases/purchases";
 import Listings from "./Pages/ListItem/Listings";
 import SellForm from "./Pages/ListItem/sellForm";
 import RentForm from "./Pages/ListItem/rentForm";
+import ItemListingPage from "./Components/Main/ItemListingFull/itemListingPage";
+import AccountApproval from "./Pages/SuperUser/accountApproval";
+import SuspensionApproval from "./Pages/SuperUser/suspensionApproval";
+import SuperUserDashboard from "./Pages/SuperUser/superUserDash";
 
 function App() {
   return (
     <>
     <BrowserRouter>
       <Routes>
-        <Route index element={<Home />}></Route>
+        {/* Public Routes */}
+        <Route index element={<Home />} />
         <Route path = "/home" element={<Home/>} />
         <Route path = "/login" element={<Login />} />
         <Route path = "/register" element={<Register />} />
@@ -26,6 +31,15 @@ function App() {
         <Route path="/rent-form" element={<RentForm />} />
 
 
+        <Route path="/item/:id" element={<ItemListingPage />} />
+
+        {/* SuperUser stuff (protected routes) */}
+        <Route path="/admin" element={<SuperUserDashboard />} />
+        <Route path="/admin/approvals" element={<AccountApproval />} />
+        <Route path="/admin/suspensions" element={<SuspensionApproval />} />
+        
+        {/* 404 if we try to access an invalid path */}
+        <Route path="*" element={(<h1>404 - Page Not Found</h1>)} />
       </Routes>
     </BrowserRouter>
     </>
