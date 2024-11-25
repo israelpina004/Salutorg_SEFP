@@ -7,7 +7,7 @@ import { Label } from "@mui/icons-material";
 import { useState } from "react";
 
 const Header =()=> {
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Initially logged out; Set true for testing later!
+    const [isLoggedIn, setIsLoggedIn] = useState(true); // Initially logged out; Set true for testing later!
     
     const handleSignOut = () => {
         setIsLoggedIn(false);
@@ -84,7 +84,13 @@ const Header =()=> {
                                         <FaUser className="icon1" /> View Profile
                                     </li>
                                     <li class="dropdown_item">
-                                        <FaClipboardList className="icon2" /> Purchases
+                                        <FaClipboardList className="icon2" /> 
+                                        <Link to="/purchases"> Purchases </Link>
+
+                                        <li class="dropdown_item">
+                                        <FaEnvelopeOpenText className="icon7" /> 
+                                        <Link to="/listings">Listings</Link>
+                                    </li>
                                     </li>
                                     <li class="dropdown_item">
                                         <FaStar className="icon3" /> Review
