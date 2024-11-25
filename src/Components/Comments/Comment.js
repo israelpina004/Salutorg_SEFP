@@ -4,7 +4,7 @@ import { deleteComment } from "../../api";
 import CommentForm from "./CommentForm";
 
 
-const Comment = ({ comment, replies, currentUserId, deleteComment, addComment, activeComment, setActiveComment, parentId = null }) => {
+const Comment = ({ comment, replies, currentUserId, addComment, activeComment, setActiveComment, parentId = null }) => {
     const canReply = Boolean(currentUserId)
     const canEdit = currentUserId === comment.userId
     const canDelete = currentUserId === comment.userId
@@ -30,9 +30,6 @@ const Comment = ({ comment, replies, currentUserId, deleteComment, addComment, a
                     {canEdit && <div className="comment-action"onClick={() => 
                         setActiveComment({id: comment.id, type: "editing"})
                     }>Edit</div>}
-                    {canDelete && <div className="comment-action"
-                    onClick={() => deleteComment(comment.id)}
-                    >Delete</div>}
                 </div>
                 {isReplying && (<CommentForm submitLabel="Reply" handleSubmit={(text) => addComment(text,replyId)}/>)}
                 {replies.length > 0 && (
@@ -43,7 +40,6 @@ const Comment = ({ comment, replies, currentUserId, deleteComment, addComment, a
                             key={reply.id} 
                             replies={[]}
                             currentUserId={currentUserId}
-                            deleteComment={deleteComment}
                             addComment={addComment}
                             parentId={comment.id}
                             activeComment={activeComment}

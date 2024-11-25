@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getComments as getCommentsApi, createComment as createCommentApi, deleteComment as deleteCommentApi} from "../../api";
+import { getComments as getCommentsApi, createComment as createCommentApi} from "../../api";
 import Comment from "./Comment";
 import CommentForm from "./CommentForm";
 
@@ -20,15 +20,6 @@ const addComment = (text, parentId) => {
     })
 }
 
-const deleteComment = (commentId) => {
-    if(window.confirm("Are you sure you want to delete")){
-        deleteCommentApi(commentId).then(() => {
-            const updatedBackendComments = backendComments.filter((backendComment) => backendComment.id !== commentId)
-            setBackendComments(updatedBackendComments)
-        })
-    }
-}
-
 useEffect(() => {
     getCommentsApi().then((data) => {
         setBackendComments(data)
@@ -47,7 +38,6 @@ useEffect(() => {
             comment={rootComment} 
             replies={getReplies(rootComment.id)}
             currentUserId = {currentUserId}
-            deleteComment={deleteComment}
             activeComment = {activeComment}
             setActiveComment = {setActiveComment}
             />
