@@ -1,0 +1,41 @@
+/* General Page Styles */
+#ProfilePage {
+    font-family: Arial, sans-serif;
+}
+
+.nav-tabs {
+    border-bottom: 2px solid #ddd;
+}
+
+.nav-link {
+    color: #555;
+    padding: 10px 20px;
+}
+
+.nav-link.active {
+    color: #000;
+    border-bottom: 2px solid #000;
+    font-weight: bold;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.card h5 {
+    margin-bottom: 20px;
+    font-size: 18px;
+}
+
+.card button {
+    margin-top: 10px;
+}
+
+select.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
