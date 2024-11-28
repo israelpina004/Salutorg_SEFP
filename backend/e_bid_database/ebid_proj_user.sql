@@ -34,6 +34,7 @@ CREATE TABLE `user` (
   `registration_date` date NOT NULL,
   `contact_info` int NOT NULL,
   `VIP_status` tinyint NOT NULL,
+  'is_approved' BOOLEAN,
   PRIMARY KEY (`user_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
