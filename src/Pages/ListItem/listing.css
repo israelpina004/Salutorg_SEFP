@@ -1,0 +1,23 @@
+.listings-title{
+    margin: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.list-button{
+    display: flex;
+    justify-content: center;
+    border: none;
+    gap: 50px;
+    background-color: hsl(35, 73%, 88%);
+    padding: 10px;
+
+}
+.rent_sell-button{
+    border-radius: 18px;
+    border: none;
+    background-color: cadetblue;
+    height: 50px;
+    width: 200px;
+    font-size: 25px;
+    font-family:Arial, Helvetica, sans-serif;
+}
