@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo2 from "../../Assets/Images/Logo-5.svg"
 import Validation from "./validation"
 import { useState } from "react";
+import axios from "axios"
 import ArithmeticBotChecker from "../../Components/ArithmeticBotCheck/bot-check";
 import "./register.css"
 // import ReCaptcha from "../../Components/ReCaptcha/recaptcha";
@@ -35,12 +36,20 @@ const Register=()=> {
       console.log("Updated values:", values); // Debugging step
    };
   
+   const navigate = useNavigate();
    
    const handleSubmit = (event) => {
       event.preventDefault();
       const validationErrors = Validation(values); 
-      console.log("Validation errors:", validationErrors); // Debugging step
       setErrors(validationErrors); 
+
+      if(Object.keys(validationErrors).length === 0) {
+         axios.post("http://localhost:8081/ebid_proj", values)
+         .then(res => {
+            navigate('/app-submitted')
+         })
+         .catch(err => console.log(err));
+      }
    };
 
 

@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `ebid_proj` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `ebid_proj` /*!40100 DEFAULT CHARACTER SET utf8mb4 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `ebid_proj`;
 -- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
@@ -26,17 +26,16 @@ DROP TABLE IF EXISTS `user`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user` (
   `user_ID` int NOT NULL AUTO_INCREMENT,
-  `seller_ID` int NOT NULL,
   `email` varchar(45) NOT NULL,
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
-  `rating` int NOT NULL,
-  `registration_date` date NOT NULL,
-  `contact_info` int NOT NULL,
-  `VIP_status` tinyint NOT NULL,
-  'is_approved' BOOLEAN,
+  `rating` float DEFAULT 0.0,
+  -- `registration_date` date NOT NULL,
+  -- `contact_info` int NOT NULL,
+  `VIP_status` BOOLEAN DEFAULT 0,
+  `is_approved` BOOLEAN DEFAULT 0,
   PRIMARY KEY (`user_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -47,5 +46,7 @@ CREATE TABLE `user` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+SELECT * FROM user;
 
 -- Dump completed on 2024-11-15 15:53:07
