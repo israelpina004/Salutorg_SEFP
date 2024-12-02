@@ -8,7 +8,7 @@ CREATE TABLE `user` (
   `email` varchar(45) NOT NULL,
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
-  `rating` int NOT NULL,
+  `rating` int,
   `VIP_status` tinyint NOT NULL,
   PRIMARY KEY (`user_ID`)
 );
