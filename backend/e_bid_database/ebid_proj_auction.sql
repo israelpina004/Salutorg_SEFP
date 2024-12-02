@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `ebid_proj`
+CREATE DATABASE  IF NOT EXISTS `ebid_proj`;
 USE `ebid_proj`;
 
 DROP TABLE IF EXISTS `auction`;
