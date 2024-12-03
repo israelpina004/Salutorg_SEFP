@@ -33,7 +33,7 @@ const Register=()=> {
    
    const handleInput = (event) => {
       setValues(prev => ({...prev, [event.target.name]: event.target.value}));
-      console.log("Updated values:", values); // Debugging step
+      // console.log("Updated values:", values);  Debugging step
    };
   
    const navigate = useNavigate();
@@ -44,11 +44,21 @@ const Register=()=> {
       setErrors(validationErrors); 
 
       if(Object.keys(validationErrors).length === 0) {
-         axios.post("http://localhost:8081/ebid_proj", values)
+         axios.post("http://localhost:8081/register", values)
          .then(res => {
             navigate('/app-submitted')
          })
-         .catch(err => console.log(err));
+         .catch(err => {
+            if (err.response && err.response.status === 400) {
+               setErrors(prevErrors => ({
+                  ...prevErrors, 
+                  username: err.response.data.error
+               }));
+            }
+            else {
+               console.log(err);
+            }
+         });
       }
    };
 
