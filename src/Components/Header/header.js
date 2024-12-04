@@ -80,7 +80,8 @@ const Header =()=> {
                             <div class="menu-wrap" id="dropdownMenu">
                                 <ul class="menu">
                                     <li class="dropdown_item">
-                                        <FaUser className="icon1" /> View Profile
+                                        <FaUser className="icon1" /> 
+                                        <Link to="/profile">View Profile</Link>
                                     </li>
                                     <li class="dropdown_item">
                                         <FaClipboardList className="icon2" /> 
