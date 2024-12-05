@@ -1,40 +1,96 @@
-import { Link } from "react-router-dom";
-import Logo2 from "../../Assets/Images/Logo-5.svg"
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Logo2 from "../../Assets/Images/Logo-5.svg";
 
-// Login page
-const Login=()=> {
-    return (
-        <>
-            <div id="AuthPage" className="container-fluid min-vh-100 bg-white">
-                <div className="w-100 d-flex align-items-center justify-content-center p-3 border-bottom border-gray-300">
-                    <Link to="/" className="btn btn-link" style={{minWidth: 120}}>
-                        <img width={120} src={ Logo2 } />
-                    </Link>
-                </div>
-                <div className="w-100 d-flex align-items-center justify-content-center p-3 border-bottom border-gray-300">
-                    Login:                   
-                </div>
-                
-                <div className="w-100 d-flex align-items-center justify-content-center p-3 border-bottom border-gray-300">
-                    <form>
-                        <div style={{paddingTop: 10}}>
-                            <input className="nav-search" type="text" placeholder="Username" style={{ width: '300px', marginBottom: '10px', padding: '10px' }} />
-                        </div>
-                        <div style={{paddingTop: 10}}>
-                            <input className="nav-search" type="password" placeholder="Password" style={{ width: '300px', padding: '10px' }} />
-                        </div>
-                        <div className="d-flex align-items-center justify-content-center" style={{paddingTop: 25, paddingBottom: 10}}>
-                            <input type="submit" value="Log In" />
-                        </div>
-                    </form>
-                </div>
+function Login() {
+  const navigate = useNavigate();
 
-                <div className="w-100 d-flex align-items-center justify-content-center p-3">
-                    Not a registered user?&nbsp;<Link to="/register">Apply</Link>&nbsp;to become one.
-                </div>
-            </div>
-        </>
-    )
-}
+  const [values, setValues] = useState({
+    username: '',
+    password: ''
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleInput = (event) => {
+    setValues(prev => ({...prev, [event.target.name] : [event.target.value]}));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (Object.keys(errors).length === 0) {
+      try {
+        const response = await axios.post("http://localhost:8082/login", {
+          username: values.username,
+          password: values.password,
+        });
+        // Login successful
+        if (response.data.success) {
+          alert(response.data.message);
+
+          // Redirect to the page indicated by backend
+          navigate(response.data.redirectTo); 
+        }
+        // Login failed
+        else {
+          alert(response.data.message);
+        }
+      } catch (error) {
+        console.error("Error during login:", error);
+        alert("An error occurred while logging in.");
+      }
+    }
+  };
+
+  return (
+    <div id="AuthPage" className="container-fluid">
+      {/* Header Section */}
+      <div className="auth-header">
+        <Link to="/" className="auth-logo-link">
+          <img src={Logo2} alt="Logo" className="auth-logo" />
+        </Link>
+      </div>
+
+      {/* Title Section */}
+      <div className="auth-title">Login</div>
+
+      {/* Form Section */}
+      <div className="auth-form-container">
+        <form className="auth-form" action="" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Username" 
+            name="username"
+            onChange={handleInput}
+            className="auth-input"
+          />
+          {errors.username && <span className='text-danger'>{errors.username}</span>}
+          <input
+            type="password"
+            placeholder="Password" 
+            name="password"
+            onChange={handleInput}
+            className="auth-input"
+          />
+          {errors.password && <span className='text-danger'>{errors.password}</span>}
+          <div className="auth-submit-container">
+            <input
+              type="submit"
+              value="Log In"
+              className="auth-submit-button"
+            />
+          </div>
+        </form>
+      </div>
+
+      <div className="auth-redirect">
+        Not a registered user?&nbsp;
+        <Link to="/register">Apply</Link>&nbsp;to become one.
+      </div>
+    </div>
+  );
+};
 
 export default Login;
