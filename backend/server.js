@@ -2,7 +2,6 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
-const mysql = require("mysql2");
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -119,16 +118,6 @@ app.post('/login', (req, res) => {
 //Added new column to user table called balance
 //ALTER TABLE user ADD COLUMN balance DECIMAL(10, 2) DEFAULT 0.00
 
-
-db.connect((err) => {
-  if (err) {
-    console.error("Error connecting to MySQL:", err.message);
-    return;
-  }
-  console.log("Connected to MySQL database.");
-});
-
-
 app.get('/', (req, res) => {
   let sql = "SELECT * FROM user";
   db.query(sql, (err, results) => {
@@ -136,7 +125,6 @@ app.get('/', (req, res) => {
       res.send(results);
   });
 });
-
 
 // Get balance for a specific user
 app.get('/balance/:userId', (req, res) => {
@@ -150,7 +138,6 @@ app.get('/balance/:userId', (req, res) => {
   });
 });
 
-
 // Update balance (deposit or withdrawal)
 app.post("/update-balance", (req, res) => {
   const { userId, amount } = req.body;
@@ -162,6 +149,93 @@ app.post("/update-balance", (req, res) => {
     res.json({ success: true });
   });
 });
+
+//Insert Sell item 
+app.post("/api/insertNewSell", upload.single('url'), (req, res) => {
+  const { name, startPrice, condition, category, deadline, description } = req.body;
+  const url=req.file;
+  
+  // Input validation
+  if (!name || !startPrice || !condition || !category || !deadline || !description || !url) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  const sql = "INSERT INTO sell_item (name, starting_price, `condition`, category, deadline, description, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  const values = [name, startPrice, condition, category, deadline, description, url.buffer];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: "Failed to insert data" });
+    }
+    console.log("Insert result:", result);
+    res.status(200).json({ message: "Data inserted successfully", result });
+  });
+});
+
+
+
+//Read from sell_item
+app.get("/api/readSellItems", (req, res)=>{
+  
+  const instruct="SELECT * FROM sell_item";
+  
+  db.query(instruct, (err, result)=>{
+    if (err){
+      return res.status(500).json({error: "Failed to read from item"});
+    }
+
+    const itemsWithBase64 = result.map(item => {
+      if (item.image) {
+          item.image = item.image.toString('base64');
+      }
+      return item;
+  });
+    res.status(200).json({ message: "Successfully read from item", result: itemsWithBase64});
+  })
+})
+
+//Insert Rent Item  
+app.post("/api/insertNewRent", upload.single('url'), (req, res) => {
+  const { name, rate, condition, category, description} = req.body;
+  const url=req.file;
+
+  // Input validation
+  if (!name || !rate || !condition || !category || !description || !url) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  const sql = "INSERT INTO rent_item (name, rental_rate, `condition`, category, description, image ) VALUES (?, ?, ?, ?, ?, ?)";
+  const values = [name, rate, condition, category, description, url.buffer ];
+
+  db.query(sql, values, (err, result) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: "Failed to insert data" });
+    }
+    console.log("Insert result:", result);
+    res.status(200).json({ message: "Data inserted successfully", result });
+  });
+});
+
+//Read from rent_item
+app.get("/api/readRentItems", (req, res)=>{
+  
+  const instruct="SELECT * FROM rent_item";
+  
+  db.query(instruct, (err, result)=>{
+    if (err){
+      return res.status(500).json({error: "Failed to read from rent_item"});
+    }
+    const itemsWithBase64 = result.map(item => {
+      if (item.image) {
+          item.image = item.image.toString('base64');
+      }
+      return item;
+    });
+    res.status(200).json({ message: "Successfully read from rent_item", result: itemsWithBase64 });
+  })
+})
 
 const port = 8081;
 app.listen(port, () => {
