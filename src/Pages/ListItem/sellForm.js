@@ -9,11 +9,8 @@ const SellForm=()=> {
     const [itemDeadline, setDeadline]= useState('')
     const [itemDescription, setDescription]= useState("")
 
+    //this would be to send data to the database
     const sendData=()=>{
-        /*   
-        This is to send the inputted info to the purchases page                
-            <Updatelistings name={itemName} price={itemPrice}> </Updatelistings>
-        */
     }
             
     return( 
