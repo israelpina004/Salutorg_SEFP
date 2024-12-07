@@ -11,7 +11,7 @@ function Login() {
     password: ''
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors] = useState({});
 
   const handleInput = (event) => {
     setValues(prev => ({ ...prev, [event.target.name]: event.target.value }));
