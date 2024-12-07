@@ -1,100 +1,99 @@
-// Connects to MySQL databases.
-
-// const express = require("express");
-// const mysql = require("mysql2");
-// const cors = require("cors")
-
-// const app = express()
-// app.use(cors)
-// app.use(express.json())
-
-// const db = mysql.createConnection({
-//     // Connection parameters
-// })
-
-// app.post('/SignUpDB', (req, res) =>{
-//     // Queries to add accounts to the login database.
-//     // Should make it so that sign ups are only admitted by a super-user.
-// })
-
-// const port = 3000;
-// app.listen(port, () => {
-//     console.log("Server listening on port ${port}");
-// })
-// GPT GENERATED
-
 const express = require("express");
-const bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
 const mysql = require("mysql2");
-const app = express();
-app.use(bodyParser.json());
+const cors = require("cors");
 
-// MySQL Database Connection
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// MySQL database connection
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "user_management",
+  host: "localhost",       
+  user: "root",   
+  password: "mu$1cP_op101", 
+  database: "ebid_proj"
 });
 
-// Route to register a new user (Viewer applies to become a User)
-app.post("/api/register", async (req, res) => {
+db.connect((err) => {
+  if (err) {
+    console.error("Error connecting to MySQL:", err);
+    return;
+  }
+  console.log("Connected to MySQL!");
+});
+
+// Register
+app.post('/register', async (req, res) => {
   const { email, username, password } = req.body;
 
-  // Check if email or username already exists
-  const existingUser = await db
-    .promise()
-    .query("SELECT * FROM users WHERE email = ? OR username = ?", [email, username]);
-
-  if (existingUser[0].length > 0) {
-    return res.status(400).json({ error: "Email or username already exists" });
-  }
-
-  // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  // Insert the user with 'pending' status
-  db.query(
-    "INSERT INTO users (email, username, password, role, status) VALUES (?, ?, ?, 'viewer', 'pending')",
-    [email, username, hashedPassword],
-    (err) => {
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);  // Hash the password
+    const sql = "INSERT INTO user (`email`, `username`, `password`) VALUES (?, ?, ?)";
+    const values = [email, username, hashedPassword];
+    
+    db.query(sql, values, (err, data) => {
       if (err) {
-        return res.status(500).json({ error: "Error registering user" });
+        if (err.code === "ER_DUP_ENTRY") {
+          return res.status(400).json({ error: "Username is already taken." });
+        }
+        return res.status(500).json({ error: "Server error." });
       }
-      res.status(201).json({ message: "Application submitted for approval" });
-    }
-  );
-});
-
-// Route to get all pending applications (SuperUser approval screen)
-app.get("/api/pending-approvals", (req, res) => {
-  db.query("SELECT id, email, username, created_at FROM users WHERE status = 'pending'", (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Error fetching pending approvals" });
-    }
-    res.json(results);
-  });
-});
-
-// Route to approve or reject a user
-app.post("/api/approve", (req, res) => {
-  const { id, action } = req.body;
-
-  // Validate action
-  if (!["approve", "reject"].includes(action)) {
-    return res.status(400).json({ error: "Invalid action" });
+      return res.status(200).json({ message: "User registered successfully.", data });
+    });
+  } catch (err) {
+    return res.status(500).json({ error: "Server error during registration." });
   }
+});
 
-  const status = action === "approve" ? "approved" : "rejected";
+// Login
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
 
-  db.query("UPDATE users SET status = ? WHERE id = ?", [status, id], (err) => {
+  // First, check in the 'user' database
+  const sqlUser = "SELECT * FROM user WHERE username = ? AND password = ?";
+  db.query(sqlUser, [username, password], (err, resultsUser) => {
     if (err) {
-      return res.status(500).json({ error: "Error updating user status" });
+      console.error("Error during login (user database):", err);
+      return res.status(500).json({ error: "Database error" });
     }
-    res.json({ message: `User ${action}d successfully` });
+
+    // If found in 'user' database, redirect to hompage
+    if (resultsUser.length > 0) {
+      return res.json({
+        success: true,
+        message: "Login successful!",
+        redirectTo: "/home", 
+      });
+    }
+
+    // If not found in 'user' database, check in the 'superuser' database
+    const sqlSuperuser = "SELECT * FROM superuser WHERE username = ? AND password = ?";
+    db.query(sqlSuperuser, [username, password], (err, resultsSuperuser) => {
+      if (err) {
+        console.error("Error during login (superuser database):", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+
+      // If found in 'superuser' database, redirect to admin page
+      if (resultsSuperuser.length > 0) {
+        return res.json({
+          success: true,
+          message: "Admin login successful!",
+          redirectTo: "/admin", 
+        });
+      } 
+      else {
+        // Login failed
+        return res.json({
+          success: false,
+          message: "Invalid username or password.",
+        });
+      }
+    });
   });
 });
 
-// Start the server
-app.listen(5000, () => console.log("Server running on port 5000"));
+const port = 8082;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
