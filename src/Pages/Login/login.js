@@ -1,49 +1,8 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
 import Logo2 from "../../Assets/Images/Logo-5.svg";
+import "./login.css";
 
-function Login() {
-  const navigate = useNavigate();
-
-  const [values, setValues] = useState({
-    username: '',
-    password: ''
-  });
-
-  const [errors, setErrors] = useState({});
-
-  const handleInput = (event) => {
-    setValues(prev => ({...prev, [event.target.name] : [event.target.value]}));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (Object.keys(errors).length === 0) {
-      try {
-        const response = await axios.post("http://localhost:8082/login", {
-          username: values.username,
-          password: values.password,
-        });
-        // Login successful
-        if (response.data.success) {
-          alert(response.data.message);
-
-          // Redirect to the page indicated by backend
-          navigate(response.data.redirectTo); 
-        }
-        // Login failed
-        else {
-          alert(response.data.message);
-        }
-      } catch (error) {
-        console.error("Error during login:", error);
-        alert("An error occurred while logging in.");
-      }
-    }
-  };
-
+const Login = () => {
   return (
     <div id="AuthPage" className="container-fluid">
       {/* Header Section */}
@@ -58,23 +17,17 @@ function Login() {
 
       {/* Form Section */}
       <div className="auth-form-container">
-        <form className="auth-form" action="" onSubmit={handleSubmit}>
+        <form className="auth-form">
           <input
             type="text"
-            placeholder="Username" 
-            name="username"
-            onChange={handleInput}
+            placeholder="Username"
             className="auth-input"
           />
-          {errors.username && <span className='text-danger'>{errors.username}</span>}
           <input
             type="password"
-            placeholder="Password" 
-            name="password"
-            onChange={handleInput}
+            placeholder="Password"
             className="auth-input"
           />
-          {errors.password && <span className='text-danger'>{errors.password}</span>}
           <div className="auth-submit-container">
             <input
               type="submit"
@@ -85,6 +38,7 @@ function Login() {
         </form>
       </div>
 
+      {/* Redirect Link Section */}
       <div className="auth-redirect">
         Not a registered user?&nbsp;
         <Link to="/register">Apply</Link>&nbsp;to become one.

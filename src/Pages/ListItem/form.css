@@ -1,0 +1,30 @@
+.listing{
+    border: 1px solid black;
+    max-width: auto;
+    margin: 0 auto;
+    text-align: left;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    max-height: auto;
+}
+
+.listing input{
+    padding: 10px;
+    margin: 10px;
+    margin-left: 10px;
+    border-radius: 18px;
+    min-height: 100%;
+    align-items: center;
+    max-width: 500px;
+
+
+}
+
+.listing textarea{
+    margin-left: 10px;
+    border-radius: 18px;
+    height: 200px;
+    width: 90%;
+}
+

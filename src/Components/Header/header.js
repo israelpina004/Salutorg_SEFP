@@ -3,11 +3,10 @@ import { IoMdSearch } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
 import {FaEnvelopeOpenText, FaShoppingCart, FaUser, FaClipboardList, FaStar, FaCog, FaSignOutAlt } from "react-icons/fa";
 import "./header.css";
-import { Label } from "@mui/icons-material";
 import { useState } from "react";
 
 const Header =()=> {
-    const [isLoggedIn, setIsLoggedIn] = useState(false); // Initially logged out; Set true for testing later!
+    const [isLoggedIn, setIsLoggedIn] = useState(true); // Initially logged out; Set true for testing later!
     
     const handleSignOut = () => {
         setIsLoggedIn(false);
@@ -84,10 +83,17 @@ const Header =()=> {
                                         <FaUser className="icon1" /> View Profile
                                     </li>
                                     <li class="dropdown_item">
-                                        <FaClipboardList className="icon2" /> Purchases
+                                        <FaClipboardList className="icon2" /> 
+                                        <Link to="/purchases"> Purchases </Link>
+
+                                        <li class="dropdown_item">
+                                        <FaEnvelopeOpenText className="icon7" /> 
+                                        <Link to="/listings">Listings</Link>
+                                    </li>
                                     </li>
                                     <li class="dropdown_item">
-                                        <FaStar className="icon3" /> Review
+                                        <FaStar className="icon3" /> 
+                                        <Link to = "/listing"> Item Listing </Link>
                                     </li>
                                     <li class="dropdown_item">
                                         <FaCog className="icon4" /> 
@@ -109,7 +115,7 @@ const Header =()=> {
                         )}
                         </span>
       
-                        <a id="nav-cart" href="ccccccart" aria-label="0 items in cart" aria-hidden="true">
+                        <a id="nav-cart" href="/cart" aria-label="0 items in cart" aria-hidden="true">
                             <div className="cart-container">
                                 <span className="cart-nav-line">Cart</span>
                                 <button className="icon-button"><FaShoppingCart /></button>
