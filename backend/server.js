@@ -10,7 +10,7 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: "localhost",       
   user: "root",   
-  password: "mu$1cP_op101", 
+  password: "", 
   database: "ebid_proj"
 });
 
