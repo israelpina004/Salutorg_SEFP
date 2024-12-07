@@ -29,7 +29,7 @@ const SellForm=()=> {
         data.append('url', itemImage);
 
         
-        fetch('http://localhost:5000/api/insertNewSell', {
+        fetch('http://localhost:8081/api/insertNewSell', {
             method: 'POST',
             body: data,
           })

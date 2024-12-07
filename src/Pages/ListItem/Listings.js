@@ -13,7 +13,7 @@ function RentalPage(){
     const [empty, setEmpty]=useState(true);
 
     useEffect(()=>{
-        fetch('http://localhost:5000/api/readRentItems', {
+        fetch('http://localhost:8081/api/readRentItems', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ function SellPage(){
 
 
     useEffect(()=>{
-        fetch('http://localhost:5000/api/readSellItems', {
+        fetch('http://localhost:8081/api/readSellItems', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

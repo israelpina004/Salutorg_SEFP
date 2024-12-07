@@ -28,7 +28,7 @@ const RentForm=()=> {
 
 
 
-        fetch('http://localhost:5000/api/insertNewRent', {
+        fetch('http://localhost:8081/api/insertNewRent', {
             method: 'POST',
             body: data,
           })
