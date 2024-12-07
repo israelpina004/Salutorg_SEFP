@@ -14,7 +14,7 @@ function Login() {
   const [errors, setErrors] = useState({});
 
   const handleInput = (event) => {
-    setValues(prev => ({...prev, [event.target.name] : [event.target.value]}));
+    setValues(prev => ({ ...prev, [event.target.name]: event.target.value }));
   };
 
   const handleSubmit = async (event) => {
@@ -22,7 +22,7 @@ function Login() {
 
     if (Object.keys(errors).length === 0) {
       try {
-        const response = await axios.post("http://localhost:8082/login", {
+        const response = await axios.post("http://localhost:8081/login", {
           username: values.username,
           password: values.password,
         });

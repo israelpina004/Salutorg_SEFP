@@ -62,4 +62,6 @@ CREATE TABLE `user` (
 -- -- Third suspension (user should be deleted after this)
 -- CALL suspend_user(35);
 
+UPDATE `user` SET `is_approved` = 1 WHERE `username` = 'lol';
+
 -- Dump completed on 2024-11-15 15:53:07
