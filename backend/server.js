@@ -114,13 +114,11 @@ app.post("/api/approve", (req, res) => {
   });
 });*/
 
-
 //Akram Backend
 //Differences:
 //Database name changed to "mydb"
 //Added new column to user table called balance
 //ALTER TABLE user ADD COLUMN balance DECIMAL(10, 2) DEFAULT 0.00;
-
 
 db.connect((err) => {
   if (err) {
@@ -130,7 +128,6 @@ db.connect((err) => {
   console.log("Connected to MySQL database.");
 });
 
-
 app.get('/', (req, res) => {
   let sql = "SELECT * FROM user";
   db.query(sql, (err, results) => {
@@ -138,7 +135,6 @@ app.get('/', (req, res) => {
       res.send(results);
   });
 });
-
 
 // Get balance for a specific user
 app.get('/balance/:userId', (req, res) => {
@@ -152,7 +148,6 @@ app.get('/balance/:userId', (req, res) => {
   });
 });
 
-
 // Update balance (deposit or withdrawal)
 app.post("/update-balance", (req, res) => {
   const { userId, amount } = req.body;
@@ -164,7 +159,6 @@ app.post("/update-balance", (req, res) => {
     res.json({ success: true });
   });
 });
-
 
 // Start the server
 app.listen(5000, () => console.log("Server running on port 5000"));
