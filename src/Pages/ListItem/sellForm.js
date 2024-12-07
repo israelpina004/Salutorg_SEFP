@@ -4,17 +4,51 @@ import './form.css';
 
 const SellForm=()=> {
 
-    const [itemName, setName]= useState('')
-    const [itemPrice, setPrice]= useState('')
-    const [itemDeadline, setDeadline]= useState('')
-    const [itemDescription, setDescription]= useState("")
+    const [itemName, setName]= useState('');
+    const [itemStartPrice, setStartPrice]= useState('');
+    const [itemDescription, setDescription]= useState("");
+    const [itemCondition, setCondition]= useState("");
+    const [itemCategory, setCategory]= useState("");
+    const [itemDeadline, setDeadline]= useState('');
+    const [itemImage, setImage]=useState('');  
 
+    //this would be to send data to the database
     const sendData=()=>{
-        /*   
-        This is to send the inputted info to the purchases page                
-            <Updatelistings name={itemName} price={itemPrice}> </Updatelistings>
-        */
-    }
+        if (!itemName || !itemStartPrice || !itemDescription || !itemCondition ||  !itemCategory || !itemDeadline || !itemImage) {
+            alert('Please fill out all fields.');
+            return;
+        }
+
+        const data=new FormData();
+        data.append('name', itemName);
+        data.append('startPrice', parseFloat(itemStartPrice, 10));
+        data.append('condition', itemCondition);
+        data.append('category', itemCategory);
+        data.append('deadline', itemDeadline);
+        data.append('description', itemDescription);
+        data.append('url', itemImage);
+
+        
+        fetch('http://localhost:5000/api/insertNewSell', {
+            method: 'POST',
+            body: data,
+          })
+          .then(response => response.json())  // Parse the JSON response
+          .then(data => {
+            console.log('Success:', data);  // Log success data
+            alert('Item inserted successfully!');  // Notify the user
+
+
+          })
+          .catch((error) => {
+            console.error('Error:', error);  // Log any errors
+            alert('Failed to insert item');
+          });
+
+        };
+        
+
+    
             
     return( 
         <>
@@ -30,14 +64,32 @@ const SellForm=()=> {
                 onChange={(e) => setName(e.target.value)}
             ></input>
         <br />
-            <label >Item Price: </label>
+            <label >Item Starting Bid Price: </label>
             <input
                 type="number"
                 required
-                value={itemPrice}
-                onChange={(e) => setPrice(e.target.value)}
+                value={itemStartPrice}
+                onChange={(e) => setStartPrice(e.target.value)}
             ></input>
         <br />
+        <label >Condition: </label>
+            <input
+                type="text"
+                required
+                value={itemCondition}
+                onChange={(e) => setCondition(e.target.value)}
+            ></input>
+        <br />
+        <label >Category: </label>
+            <input
+                type="text"
+                required
+                value={itemCategory}
+                onChange={(e) => setCategory(e.target.value)}
+            ></input>
+        <br />
+
+        
             <label className="labels">Bidding Deadline: </label>
             <input
                 type="date"
@@ -56,12 +108,19 @@ const SellForm=()=> {
         <br />
             <label className="labels">Upload Images: </label>
             <input 
-                type="file" 
+                type="file"
+                onChange={(e) => setImage(e.target.files[0])}
             ></input>
             </form>
-            <button onclick={sendData}>Submit Listing</button>
-        </div> 
-        </>
-    )
-}
-export default SellForm
+            <button onClick={sendData}>Submit Listing</button>
+        </div>
+                </>
+    );
+
+};
+export default SellForm;
+
+
+
+
+

@@ -1,0 +1,53 @@
+/* Overall */
+.admin-dash {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #f05a1f;
+    color: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+  
+.sidebar h1 {
+    color: black;
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+}
+  
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+  
+.sidebar ul li {
+    margin: 15px 0;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 4px;
+    transition: transform 0.2s;
+}
+  
+.sidebar ul li:hover {
+    transform: scale(1.1);
+}
+
+/* Main */
+.main {
+    flex: 1;
+    padding: 20px;  
+    overflow-y: auto;
+}
+
+.main p1 {
+    display: flex;
+    justify-content: center;  
+}
+  

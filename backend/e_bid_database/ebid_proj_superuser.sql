@@ -13,3 +13,5 @@ CREATE TABLE `superuser` (
   `last_active` datetime NOT NULL,
   PRIMARY KEY (`admin_ID`)
 );
+
+-- ALTER TABLE `superuser` MODIFY password VARCHAR(255);
