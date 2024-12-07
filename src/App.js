@@ -13,6 +13,8 @@ import ItemListingPage from "./Components/ItemListingFull/itemListingPage"
 import AccountApproval from "./Pages/SuperUser/accountApproval";
 import SuspensionApproval from "./Pages/SuperUser/suspensionApproval";
 import SuperUserDashboard from "./Pages/SuperUser/superUserDash";
+import Profile from "./Pages/Profile/view_profile";
+import PaymentDetails from "./Pages/Profile/PaymentDetails";
 
 function App() {
   return (
@@ -29,7 +31,8 @@ function App() {
         <Route path="/listings" element={<Listings />} /> 
         <Route path="/sell-form" element={<SellForm />} />
         <Route path="/rent-form" element={<RentForm />} />
-
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/payment-details" element={<PaymentDetails />} />
 
         <Route path="/item/:id" element={<ItemListingPage />} />
 

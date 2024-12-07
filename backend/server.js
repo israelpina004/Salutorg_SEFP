@@ -1,9 +1,8 @@
-// Connects to MySQL database
-
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const mysql = require("mysql2");
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -12,13 +11,14 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "RuPaNgO01!",
+  password: "password",
   database: "ebid_proj",
 });
 
 // Register
 app.post('/register', async (req, res) => {
   const { email, username, password } = req.body;
+
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);  // Hash the password
@@ -110,6 +110,56 @@ app.post('/login', (req, res) => {
         });
       }
     });
+  });
+});
+
+//Akram Backend
+//Differences:
+//Database name changed to "mydb"
+//Added new column to user table called balance
+//ALTER TABLE user ADD COLUMN balance DECIMAL(10, 2) DEFAULT 0.00
+
+
+db.connect((err) => {
+  if (err) {
+    console.error("Error connecting to MySQL:", err.message);
+    return;
+  }
+  console.log("Connected to MySQL database.");
+});
+
+
+app.get('/', (req, res) => {
+  let sql = "SELECT * FROM user";
+  db.query(sql, (err, results) => {
+      if (err) throw err;
+      res.send(results);
+  });
+});
+
+
+// Get balance for a specific user
+app.get('/balance/:userId', (req, res) => {
+  const userId = req.params.userId;
+  const query = "SELECT balance FROM user WHERE user_ID = ?";
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ balance: results[0]?.balance || 0 });
+  });
+});
+
+
+// Update balance (deposit or withdrawal)
+app.post("/update-balance", (req, res) => {
+  const { userId, amount } = req.body;
+  const query = "UPDATE user SET balance = balance + ? WHERE user_ID = ?";
+  db.query(query, [amount, userId], (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json({ success: true });
   });
 });
 
