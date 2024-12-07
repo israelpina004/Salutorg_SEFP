@@ -3,6 +3,8 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const app = express();
+const multer=require('multer');
+const upload=multer();
 app.use(cors());
 app.use(express.json());
 
@@ -10,7 +12,7 @@ app.use(express.json());
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "password",
+  password: "RuPaNgO01!",
   database: "ebid_proj",
 });
 
