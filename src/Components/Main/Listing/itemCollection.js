@@ -1,7 +1,74 @@
 import { Link } from "react-router-dom";
 import "./itemCollection.css";
+import { useState, useEffect } from "react";
+
+const ItemCard = ({ id, title, price, imageUrl }) => {
+  return (
+    
+    <Link to={`/item/${id}`} className="link-item-card">
+      <div className="item-card">
+        <div className="item-image-container">
+          <img src={`data:image/jpeg;base64,${imageUrl}`} alt={title} className="item-image" />
+        </div>
+        <div className="item-details">
+          <p className="item-title">{title}</p>
+          <p className="item-price">${price}</p>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+const ItemCollection = () => {
+  const [items, setItems]=useState([]);
+
+  useEffect(()=>{
+      fetch('http://localhost:5000/api/readSellItems', {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      })
+      .then(response =>response.json())
+      .then(data=>{
+          console.log("data received:", data);
+          console.log("Data:", data);
+          
+          setItems(data.result)
+          console.log("items:", data.result);
+      })
+      .catch((error)=>{
+          console.error("Fatoumatas Error: ", error);
+      });
+
+  }, []) 
+
+  //sorting method if needed
+
+
+  return (
+    <div className="item-collection">
+      <h2>Item Collections</h2>
+      <p>Recommended for you</p>
+      <div className="item-list">
+        {items.map((item, index) => (
+          <ItemCard
+            key={index}
+            id={item.id}
+            title={item.name}
+            price={item.starting_price}
+            imageUrl={item.image}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ItemCollection;
 
 // This needs to be pulled from db
+/*
 const ListingItems = [
   {
     id: 1,
@@ -104,44 +171,4 @@ const ListingItems = [
     deadline: "2024-11-21",
   },
 ];
-
-
-const ItemCard = ({ id, title, price, imageUrl }) => {
-  return (
-    
-    <Link to={`/item/${id}`} className="link-item-card">
-      <div className="item-card">
-        <div className="item-image-container">
-          <img src={imageUrl} alt={title} className="item-image" />
-        </div>
-        <div className="item-details">
-          <p className="item-title">{title}</p>
-          <p className="item-price">${price}</p>
-        </div>
-      </div>
-    </Link>
-  );
-};
-
-const ItemCollection = () => {
-  return (
-    <div className="item-collection">
-      <h2>Item Collections</h2>
-      <p>Recommended for you</p>
-      <div className="item-list">
-        {ListingItems.slice(0, 10).map((item, index) => (
-          <ItemCard
-            key={index}
-            id={item.id}
-            title={item.title}
-            price={item.price}
-            imageUrl={item.imageUrl}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default ItemCollection;
-
+*/
