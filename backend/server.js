@@ -1,100 +1,62 @@
 // Connects to MySQL databases.
 
-// const express = require("express");
-// const mysql = require("mysql2");
-// const cors = require("cors")
-
-// const app = express()
-// app.use(cors)
-// app.use(express.json())
-
-// const db = mysql.createConnection({
-//     // Connection parameters
-// })
-
-// app.post('/SignUpDB', (req, res) =>{
-//     // Queries to add accounts to the login database.
-//     // Should make it so that sign ups are only admitted by a super-user.
-// })
-
-// const port = 3000;
-// app.listen(port, () => {
-//     console.log("Server listening on port ${port}");
-// })
-// GPT GENERATED
-
 const express = require("express");
-const bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
 const mysql = require("mysql2");
-const app = express();
-app.use(bodyParser.json());
+const cors = require("cors");
+const bcrypt = require("bcrypt");
 
-// MySQL Database Connection
+const app = express();
+app.use(cors());
+app.use(express.json());
+
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "password",
-  database: "user_management",
+    host: "localhost",
+    user: "root",
+    password: "(PASSWORD)",
+    database: "ebid_proj"
 });
 
-// Route to register a new user (Viewer applies to become a User)
-app.post("/api/register", async (req, res) => {
+app.post('/register', async (req, res) => {
   const { email, username, password } = req.body;
 
-  // Check if email or username already exists
-  const existingUser = await db
-    .promise()
-    .query("SELECT * FROM users WHERE email = ? OR username = ?", [email, username]);
-
-  if (existingUser[0].length > 0) {
-    return res.status(400).json({ error: "Email or username already exists" });
-  }
-
-  // Hash the password
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  // Insert the user with 'pending' status
-  db.query(
-    "INSERT INTO users (email, username, password, role, status) VALUES (?, ?, ?, 'viewer', 'pending')",
-    [email, username, hashedPassword],
-    (err) => {
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);  // Hash the password
+    const sql = "INSERT INTO user (`email`, `username`, `password`) VALUES (?, ?, ?)";
+    const values = [email, username, hashedPassword];
+    
+    db.query(sql, values, (err, data) => {
       if (err) {
-        return res.status(500).json({ error: "Error registering user" });
+        if (err.code === "ER_DUP_ENTRY") {
+          return res.status(400).json({ error: "Username is already taken." });
+        }
+        return res.status(500).json({ error: "Server error." });
       }
-      res.status(201).json({ message: "Application submitted for approval" });
-    }
-  );
-});
-
-// Route to get all pending applications (SuperUser approval screen)
-app.get("/api/pending-approvals", (req, res) => {
-  db.query("SELECT id, email, username, created_at FROM users WHERE status = 'pending'", (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Error fetching pending approvals" });
-    }
-    res.json(results);
-  });
-});
-
-// Route to approve or reject a user
-app.post("/api/approve", (req, res) => {
-  const { id, action } = req.body;
-
-  // Validate action
-  if (!["approve", "reject"].includes(action)) {
-    return res.status(400).json({ error: "Invalid action" });
+      return res.status(200).json({ message: "User registered successfully.", data });
+    });
+  } catch (err) {
+    return res.status(500).json({ error: "Server error during registration." });
   }
-
-  const status = action === "approve" ? "approved" : "rejected";
-
-  db.query("UPDATE users SET status = ? WHERE id = ?", [status, id], (err) => {
-    if (err) {
-      return res.status(500).json({ error: "Error updating user status" });
-    }
-    res.json({ message: `User ${action}d successfully` });
-  });
 });
 
-// Start the server
-app.listen(5000, () => console.log("Server running on port 5000"));
+const port = 8081;
+app.listen(port, () => {
+    console.log("Server listening on port 8081");
+});
+
+//   const sql = "INSERT INTO user (`email`, `username`, `password`) VALUES (?, ?, ?)";
+//   const values = [
+//     req.body.email,
+//     req.body.username,
+//     req.body.password
+//   ];
+
+//   db.query(sql, values, (err, data) => {  // Fixed this line
+//     if (err) {
+//       if (err.code === "ER_DUP_ENTRY") {
+//         return res.status(400).json({ error: "Username is already taken." });
+//       }
+//       return res.status(500).json({ error: "Server error." });
+//     }
+//     return res.status(200).json({ message: "User applied successfully.", data });
+//   });
+// });
