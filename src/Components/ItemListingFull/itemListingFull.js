@@ -2,6 +2,8 @@ import "./itemListingFull.css";
 import PropTypes from "prop-types";
 
 function ItemListingFull({ image, name, currentPrice, description, topBid, deadline }) {
+  console.log("ItemListingFull props:", { image, name, currentPrice, description, topBid, deadline });
+
   return (
     <div className="item-listing-full">
       <div className="item-image-full">
@@ -13,11 +15,15 @@ function ItemListingFull({ image, name, currentPrice, description, topBid, deadl
       </div>
       <div className="item-details-full">
         <h2>{name || "Unnamed Item"}</h2>
-        <p className="current-price">Current Price: ${currentPrice?.toFixed(2) || "0.00"}</p>
+        <p className="current-price">
+          Current Price: ${Number(currentPrice || 0).toFixed(2)}
+        </p>
         <p className="description">{description || "No description available."}</p>
       </div>
       <div className="bid-info">
-        <button className="top-bid">Top Bid: {topBid ? `$${topBid.toFixed(2)}` : "N/A"}</button>
+        <button className="top-bid">
+          Top Bid: {topBid ? `$${Number(topBid).toFixed(2)}` : "N/A"}
+        </button>
         <button className="deadline">Deadline: {deadline || "N/A"}</button>
       </div>
     </div>
@@ -28,7 +34,7 @@ function ItemListingFull({ image, name, currentPrice, description, topBid, deadl
 ItemListingFull.propTypes = {
   image: PropTypes.string, // URL for the item image
   name: PropTypes.string.isRequired, // Name of the item
-  currentPrice: PropTypes.number.isRequired, // Current price of the item
+  currentPrice: PropTypes.oneOfType([PropTypes.number, PropTypes.string]), // Current price of the item
   description: PropTypes.string, // Description of the item
   topBid: PropTypes.number, // Top bid amount
   deadline: PropTypes.string.isRequired, // Deadline in mm/dd/yy format
@@ -41,3 +47,4 @@ ItemListingFull.defaultProps = {
 };
 
 export default ItemListingFull;
+

@@ -50,7 +50,7 @@ const RentForm=()=> {
         <>
         <Header> </Header>
         <h1>Rent</h1>
-        <div className="list">
+        <div className="sell-form">
             <form className="listing">
             <label className="labels">Item Name: </label>
             <input

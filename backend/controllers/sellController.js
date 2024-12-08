@@ -1,28 +1,58 @@
 const db = require("../models/db");
 
 const insertSellItem = (req, res) => {
-  const { name, startPrice, condition, category, deadline, description } = req.body;
-  const url = req.file;
+  const { name, description, item_condition, category, starting_price, deadline } = req.body;
+  const image = req.file ? req.file.buffer : null;
 
-  if (!name || !startPrice || !condition || !category || !deadline || !description || !url) {
-    return res.status(400).json({ error: "All fields are required" });
-  }
+  // Insert into `item` table first
+  const itemSql = `
+    INSERT INTO item (name, description, item_condition, category, image) 
+    VALUES (?, ?, ?, ?, ?);
+  `;
+  const itemValues = [name, description, item_condition, category, image];
 
-  const sql =
-    "INSERT INTO sell_item (name, starting_price, `condition`, category, deadline, description, image) VALUES (?, ?, ?, ?, ?, ?, ?)";
-  const values = [name, startPrice, condition, category, deadline, description, url.buffer];
-
-  db.query(sql, values, (err, result) => {
+  db.query(itemSql, itemValues, (err, result) => {
     if (err) {
       console.error("Database error:", err.message);
-      return res.status(500).json({ error: "Failed to insert data" });
+      return res.status(500).json({ error: "Failed to insert item" });
     }
-    res.status(200).json({ message: "Data inserted successfully", result });
+
+    const itemId = result.insertId;
+
+    // Insert into `sell` table
+    const sellSql = `
+      INSERT INTO sell (item_ID, starting_price, deadline) 
+      VALUES (?, ?, ?);
+    `;
+    const sellValues = [itemId, starting_price, deadline];
+
+    db.query(sellSql, sellValues, (err) => {
+      if (err) {
+        console.error("Database error:", err.message);
+        return res.status(500).json({ error: "Failed to insert sell details" });
+      }
+
+      res.status(200).json({ message: "Sell item inserted successfully" });
+    });
   });
 };
 
 const getSellItems = (req, res) => {
-  const sql = "SELECT * FROM sell_item";
+  const sql = `
+    SELECT 
+      item.item_ID AS id, 
+      item.name, 
+      item.description, 
+      item.item_condition, 
+      item.category, 
+      item.image, 
+      sell.starting_price AS price, 
+      sell.deadline
+    FROM 
+      item
+    INNER JOIN 
+      sell ON item.item_ID = sell.item_ID;
+  `;
 
   db.query(sql, (err, results) => {
     if (err) {
