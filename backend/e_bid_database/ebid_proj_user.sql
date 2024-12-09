@@ -9,6 +9,6 @@ CREATE TABLE `user` (
   `username` varchar(45) NOT NULL,
   `password` varchar(45) NOT NULL,
   `rating` int DEFAULT NULL,
-  `VIP_status` tinyint NOT NULL,
+  `VIP_status` tinyint DEFAULT NULL,
   PRIMARY KEY (`user_ID`)
 );
