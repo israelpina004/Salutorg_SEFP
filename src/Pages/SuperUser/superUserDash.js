@@ -26,10 +26,10 @@ function SuperUserDashboard() {
             <h1>Navigation</h1>
               <ul>
                 <li onClick={() => handleClick('approvals')}
-                style={{ backgroundColor: isActive == 'approvals' ? '#cc3f07' : 'transparent' }}>
+                style={{ backgroundColor: isActive === 'approvals' ? '#cc3f07' : 'transparent' }}>
                   Account Approvals</li>
                   <li onClick={() => handleClick('suspensions')}
-                style={{ backgroundColor: isActive == 'suspensions' ? '#cc3f07' : 'transparent' }}>
+                style={{ backgroundColor: isActive === 'suspensions' ? '#cc3f07' : 'transparent' }}>
                   Suspension Appeals</li>
                 <li onClick={handleSignOut}>Sign Out</li>
               </ul>
@@ -38,8 +38,8 @@ function SuperUserDashboard() {
           <main className="main">
             <h1>SuperUser Dashboard</h1>
             <p1>Welcome back! Use Navigation to check pending account approvals, or handle any suspensions.</p1>
-              {((isActive == 'approvals') && <p>Test</p>) || 
-              ((isActive == 'suspensions') && <p>Test but like,,, the other one</p>)}
+              {((isActive === 'approvals') && <p>Test</p>) || 
+              ((isActive === 'suspensions') && <p>Test but like,,, the other one</p>)}
           </main>
         </div>
       </div>

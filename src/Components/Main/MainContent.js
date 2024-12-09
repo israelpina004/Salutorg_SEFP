@@ -1,23 +1,17 @@
 import "./MainContent.css";  
 import ItemCollection from "./Listing/itemCollection";  
 import ImageCarousel from "../ImageCarousel/imageCarousel"
-import React, {useState, useEffect} from 'react';
 
 const MainContent = () => {
-
-
-    
-
-
     return (
         <div className="main-content">
             <div className="main-page-container">
                 <ImageCarousel />
-                <div className="main-page-row">  
-                    <ItemCollection />
+                <div className="main-page-row">
+                    <ItemCollection title="My Listings"/>
                 </div>
                 <div className="main-page-row">    
-                    <ItemCollection />  
+                   <ItemCollection title="Featured Items"/>  
                 </div>
                 
             </div>

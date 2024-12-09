@@ -8,7 +8,7 @@ const Profile = () => {
                 {/* Header with Logo */}
                 <div className="w-100 d-flex align-items-center justify-content-center p-3 border-bottom border-gray-300">
                     <Link to= "/" className = "btn btn-link" style = {{minWidth: 120}}>
-                        <img width = {120} src = { Logo2 } />
+                        <img width = {120} src = { Logo2 } alt="" />
                     </Link>
                 </div>
 

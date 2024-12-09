@@ -1,63 +1,53 @@
 import { useParams } from "react-router-dom";
 import ItemListingFull from "./itemListingFull";
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
+
 
 
   function ItemListingPage() {
     const [items, setItems]=useState([]);
-
-  useEffect(()=>{
-      fetch('http://localhost:5000/api/readSellItems', {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-      })
-      .then(response =>response.json())
-      .then(data=>{
-          console.log("data received:", data);
-          
-          setItems(data.result)
-      })
-      .catch((error)=>{
-          console.error("Fatoumatas Error: ", error);
-      });
-
-  }, [])
-  
-
-
-  const itemsList=items.map((item)=>({
-    id: item.iten_ID,
-    name: item.name,
-    condition: item.condition,
-    price: item.starting_price,
-    deadline: item.deadline,
-    description: item.description,
-    topBid: 0,
-    image: item.image,
-  }))
-
     const { id } = useParams(); // Get the dynamic ID from the URL
-    const item = itemsList.find((item) => item.item_ID === parseInt(id)); // Find the item by ID
-  
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      console.log("Fetching items...");
+      fetch('http://localhost:5000/api/readSellItems', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Data received:", data);
+          setItems(data.result || []);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Fatoumatas Error: Error fetching items", error);
+          setLoading(false);
+        });
+    }, []);
+    
+    if (loading) {
+      return <p>Loading items...</p>;
+    }
+
+    const item = items.find((item) => item.id === parseInt(id)); // Find the item by ID
+    
     if (!item) {
       return <p>Item not found.</p>; // Display error if item is not found
     }
-  
-  return (
-    <div>
-      <h1>{item.name}</h1>
+    
+    return (
+      <div>
+        <h1>{item.name}</h1>
         <ItemListingFull
           image={item.image}
           name={item.name}
           currentPrice={item.price}
-          description={item.description}
-          //topBid={item.topBid}
           deadline={item.deadline}
         />
-    </div>
-  );
+      </div>
+    );
 }
 
 export default ItemListingPage;

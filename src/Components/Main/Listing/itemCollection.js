@@ -4,8 +4,7 @@ import { useState, useEffect } from "react";
 
 const ItemCard = ({ id, title, price, imageUrl }) => {
   return (
-    
-    <Link to={`/item/${id}`} className="link-item-card">
+    <Link to={`/item/${id}`}  className="link-item-card">
       <div className="item-card">
         <div className="item-image-container">
           <img src={`data:image/jpeg;base64,${imageUrl}`} alt={title} className="item-image" />
@@ -19,45 +18,44 @@ const ItemCard = ({ id, title, price, imageUrl }) => {
   );
 };
 
-const ItemCollection = () => {
+const ItemCollection = ({ title }) => {
   const [items, setItems]=useState([]);
 
-  useEffect(()=>{
-      fetch('http://localhost:5000/api/readSellItems', {
-          method: 'GET',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-      })
+  useEffect(()=> {
+    console.log("Fetching items...");
+    fetch('http://localhost:5000/api/readSellItems', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
       .then(response =>response.json())
-      .then(data=>{
-          console.log("data received:", data);
-          console.log("Data:", data);
-          
-          setItems(data.result)
-          console.log("items:", data.result);
+      .then(data=> {
+        console.log("data received:", data);
+        console.log("Data:", data);
+        setItems(data.result || []);
       })
-      .catch((error)=>{
-          console.error("Fatoumatas Error: ", error);
+      .catch((error)=> {
+          console.error("Error fetching items", error);
       });
-
   }, []) 
 
   //sorting method if needed
 
-
+  // We fetch the same information once here, and once in itemListingPage... however, I cannot find a reasonable fix for this due to time.
   return (
     <div className="item-collection">
-      <h2>Item Collections</h2>
+      <h2>{title}</h2>
       <p>Recommended for you</p>
       <div className="item-list">
-        {items.map((item, index) => (
+        {items.map((item) => (
           <ItemCard
-            key={index}
+            key={item.id}
             id={item.id}
             title={item.name}
-            price={item.starting_price}
+            price={item.price}
             imageUrl={item.image}
+            item={item}
           />
         ))}
       </div>

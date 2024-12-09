@@ -28,7 +28,7 @@ const RentForm=()=> {
 
 
 
-        fetch('http://localhost:8081/api/insertNewRent', {
+        fetch('http://localhost:5000/api/rent/insertNewRent', {
             method: 'POST',
             body: data,
           })
@@ -50,7 +50,7 @@ const RentForm=()=> {
         <>
         <Header> </Header>
         <h1>Rent</h1>
-        <div className="list">
+        <div className="sell-form">
             <form className="listing">
             <label className="labels">Item Name: </label>
             <input
