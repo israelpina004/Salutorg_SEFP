@@ -17,6 +17,7 @@ import Profile from "./Pages/Profile/view_profile";
 import PaymentDetails from "./Pages/Profile/PaymentDetails";
 
 function App() {
+  
   return (
     <>
     <BrowserRouter>

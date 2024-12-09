@@ -1,7 +1,5 @@
 const db = require("../models/db");
 
-const db = require("../models/db");
-
 const insertRentItem = (req, res) => {
   const { name, description, item_condition, category, rental_rate } = req.body;
   const image = req.file ? req.file.buffer : null;

@@ -41,10 +41,10 @@ const Register=()=> {
    const handleSubmit = (event) => {
       event.preventDefault();
       const validationErrors = Validation(values); 
-      setErrors(validationErrors); 
+      setErrors(validationErrors);
 
       if(Object.keys(validationErrors).length === 0) {
-         axios.post("http://localhost:8081/register", values)
+         axios.post(`http://localhost:${process.env.REACT_APP_API_PORT}/api/register`, values)
          .then(res => {
             navigate('/app-submitted')
          })
@@ -67,6 +67,8 @@ const Register=()=> {
    const handleValidAnswer = (isValid) => {
       setSubmitEnabled(isValid);
    }
+
+   console.log(process.env.REACT_APP_API_PORT);
 
    return (
       <>

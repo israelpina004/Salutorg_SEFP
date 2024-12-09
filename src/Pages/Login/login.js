@@ -22,7 +22,7 @@ function Login() {
 
     if (Object.keys(errors).length === 0) {
       try {
-        const response = await axios.post("http://localhost:8081/login", {
+        const response = await axios.post(`http://localhost:${process.env.REACT_APP_API_PORT}/api/login`, {
           username: values.username,
           password: values.password,
         });

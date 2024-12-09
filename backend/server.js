@@ -6,6 +6,9 @@ const bodyParser = require("body-parser");
 dotenv.config(); // Load environment variables
 const app = express();
 
+// Set a global variable
+PORT = process.env.REACT_APP_API_PORT;   
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -26,7 +29,6 @@ app.get("/", (req, res) => {
   res.send("Welcome to the API!");
 });
 
-const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 

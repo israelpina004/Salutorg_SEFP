@@ -33,7 +33,7 @@ const SellForm=()=> {
         }
 
         
-        fetch('http://localhost:8081/api/insertNewSell', {
+        fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/insertNewSell`, {
             method: 'POST',
             body: data,
           })

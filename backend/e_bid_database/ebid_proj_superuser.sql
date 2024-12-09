@@ -8,10 +8,8 @@ CREATE TABLE `superuser` (
   `permissions` varchar(5000) NOT NULL,
   `username` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
-  `password` varchar(45) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `activity_log` datetime NOT NULL,
   `last_active` datetime NOT NULL,
   PRIMARY KEY (`admin_ID`)
 );
-
--- ALTER TABLE `superuser` MODIFY password VARCHAR(255);

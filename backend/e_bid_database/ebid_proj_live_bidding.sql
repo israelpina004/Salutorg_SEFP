@@ -1,3 +1,5 @@
+-- Kept in case of future use.
+
 CREATE DATABASE  IF NOT EXISTS `ebid_proj`;
 USE `ebid_proj`;
 

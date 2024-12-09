@@ -13,7 +13,7 @@ function RentalPage(){
     const [empty, setEmpty]=useState(true);
 
     useEffect(()=>{
-        fetch('http://localhost:8081/api/readRentItems', {
+        fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/readRentItems`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ function SellPage(){
 
 
     useEffect(()=>{
-        fetch('http://localhost:8081/api/readSellItems', {
+        fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/readSellItems`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
