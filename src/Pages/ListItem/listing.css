@@ -1,0 +1,51 @@
+.listings-title{
+    margin: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.list-button{
+    display: flex;
+    justify-content: center;
+    border: none;
+    gap: 50px;
+    background-color: hsl(35, 73%, 88%);
+    padding: 10px;
+
+}
+.rent_sell-button{
+    border-radius: 18px;
+    border: none;
+    background-color: cadetblue;
+    height: 50px;
+    width: 200px;
+    font-size: 25px;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+
+.purchase-image{
+    width: 200px;
+    height: 200px;
+
+}
+
+.tabs-container {
+    display: flex;
+    border-bottom: 2px solid #ccc;
+  }
+  
+  /* Style for each tab */
+  .tab {
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px 5px 0 0;
+    transition: background-color 0.3s ease;
+  }
+
+  .tab:hover {
+  background-color: #e0e0e0;
+}

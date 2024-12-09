@@ -1,13 +1,12 @@
 import Header from "../../Components/Header/header"
 import MainContent from "../../Components/Main/MainContent";
-import Balance from "../../Components/Balance/Balance";
-
+import CommentSection from "../../Components/CommentSection/CommentSection";
 const Home =()=> {
     return (
         <>
             <Header />
             <MainContent />
-            <Balance/>
+            <CommentSection/>
         </>
     )
 }

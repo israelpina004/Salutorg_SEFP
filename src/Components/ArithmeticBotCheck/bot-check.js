@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "../../Pages/Register/register.css"
 
 const ArithmeticBotChecker = ({ onValidAnswer }) => {
   const [arithmeticProblem, setArithmeticProblem] = useState("");
@@ -47,18 +48,17 @@ const ArithmeticBotChecker = ({ onValidAnswer }) => {
 
   return (
     <>
-    <div style={{paddingTop: 10}}>
+    <div className="auth-redirect">
       <label>Solve this to prove you're not a bot: {arithmeticProblem}</label>
     </div>
     <div>
       <input
-        className="nav-search"
         type="text"
         placeholder="Answer"
         maxLength={3}
         value={userAnswer}
         onChange={(e) => setUserAnswer(e.target.value)}
-        style={{ width: "300px", padding: "10px", marginTop: "10px" }}
+        className="auth-input"
       />
     </div>
     </>

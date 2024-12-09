@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { useUser } from "../UserContext";
 
 //IMPORTANT
 //RN - Using static userId to make sure components functions normally
 //In real application need way to get userId of currently logged in user!!!
-const Balance = ({userId = 1}) => {
+const Balance = () => {
+  const { user } = useUser(); // Get the logged-in user from context
+  const userId = user?.id; // Use the user's ID
   const [balance, setBalance] = useState(0);
   const[amount, setAmount] = useState(0);
 
 useEffect(() => {
-  fetch(`http://localhost:5000/balance/${userId}`)
+  fetch(`http://localhost:8081/balance/${userId}`)
     .then((res) => res.json())
     .then((data) => {
       console.log("Fetched data: ", data)
@@ -18,7 +21,7 @@ useEffect(() => {
 
 // Update the balance by making an API call
 const updateBalance = (amount) => {
-  fetch("http://localhost:5000/update-balance", {
+  fetch("http://localhost:8081/update-balance", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -28,7 +31,7 @@ const updateBalance = (amount) => {
     .then((res) => res.json())
     .then(() => {
       // Refetch the updated balance
-      fetch(`http://localhost:5000/balance/${userId}`)
+      fetch(`http://localhost:8081/balance/${userId}`)
         .then((res) => res.json())
         .then((data) => {
           console.log("Updated balance:", data.balance);
