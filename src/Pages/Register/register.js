@@ -44,7 +44,7 @@ const Register=()=> {
       setErrors(validationErrors); 
 
       if(Object.keys(validationErrors).length === 0) {
-         axios.post("http://localhost:8081/register", values)
+         axios.post("http://localhost:5000/api/register", values)
          .then(res => {
             navigate('/app-submitted')
          })

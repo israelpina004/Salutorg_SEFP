@@ -1,64 +1,49 @@
-import { useEffect, useState } from "react";
+import { useFetchData } from "../../Hooks/useFetchData";
+import ActionCard from "../../Components/Action/actionCard.js";
 
 function SuspensionApproval() {
-  const [suspendedUsers, setSuspendedUsers] = useState([]);
-
-  // Fetch suspended users
-  useEffect(() => {
-    fetch("/api/admin/suspended")
-      .then((response) => response.json())
-      .then((data) => setSuspendedUsers(data))
-      .catch((error) => console.error("Error fetching suspended users:", error));
-  }, []);
+  const { data: suspendedUsers, loading, error, setData: setSuspendedUsers } = useFetchData("/api/admin/suspended");
 
   const handleRevoke = (userId) => {
     fetch(`/api/admin/revoke`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: userId }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          setSuspendedUsers(suspendedUsers.filter((user) => user.id !== userId));
-        }
-      })
-      .catch((error) => console.error("Error revoking suspension:", error));
+    }).then((response) => {
+      if (response.ok) {
+        setSuspendedUsers((prev) => prev.filter((user) => user.id !== userId));
+      }
+    });
   };
 
   const handleKeep = (userId) => {
     fetch(`/api/admin/keep`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: userId }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          setSuspendedUsers(suspendedUsers.filter((user) => user.id !== userId));
-        }
-      })
-      .catch((error) => console.error("Error keeping suspension:", error));
+    }).then((response) => {
+      if (response.ok) {
+        setSuspendedUsers((prev) => prev.filter((user) => user.id !== userId));
+      }
+    });
   };
+
+  if (loading) return <p>Loading suspension appeals...</p>;
+  if (error) return <p>Error fetching suspension appeals: {error}</p>;
 
   return (
     <div>
       <h1>Suspension Appeals</h1>
       <div className="suspensions-container">
         {suspendedUsers.map((user) => (
-          <div key={user.id} className="suspension-card">
-            <p>Email: {user.email}</p>
-            <p>Suspension Date: {user.suspension_date}</p>
-            <p>Reason: {user.suspension_reason}</p>
-            <button onClick={() => handleRevoke(user.id)} className="revoke-btn">
-              Revoke Suspension
-            </button>
-            <button onClick={() => handleKeep(user.id)} className="keep-btn">
-              Keep Suspension
-            </button>
-          </div>
+          <ActionCard
+            key={user.id}
+            user={{ ...user, date: user.suspension_date, reason: user.suspension_reason }}
+            buttons={[
+              { label: "Revoke", action: handleRevoke, className: "revoke-btn" },
+              { label: "Keep", action: handleKeep, className: "keep-btn" },
+            ]}
+          />
         ))}
       </div>
     </div>
@@ -66,3 +51,4 @@ function SuspensionApproval() {
 }
 
 export default SuspensionApproval;
+
