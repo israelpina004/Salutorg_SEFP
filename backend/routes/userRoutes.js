@@ -6,9 +6,9 @@ const {
   loginUser,
   getBalance,
   updateBalance,
-  getPendingApprovals,
-  approveOrRejectUser,
-  getUsers
+  getUsers,
+  logoutUser,
+  getLoggedInUser,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -16,10 +16,10 @@ const router = express.Router();
 // Routes to the functions
 router.post("/register", registerUser);
 router.post("/login", loginUser);
+router.post("/getlogin", getLoggedInUser);
+router.post("/logout", logoutUser);
 router.get("/balance/:userId", getBalance);
 router.post("/update-balance", updateBalance);
-router.get("/pending-approvals", getPendingApprovals);
-router.post("/approve", approveOrRejectUser);
 router.get("/", getUsers);
 
 module.exports = router;

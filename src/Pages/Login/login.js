@@ -3,7 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Logo2 from "../../Assets/Images/Logo-5.svg";
 
-function Login() {
+const Login = ({ setIsLoggedIn }) => {
+  if (typeof setIsLoggedIn !== "function") {
+    console.error("setIsLoggedIn is not a function. Make sure it's passed from the parent component.");
+  }
+  
   const navigate = useNavigate();
 
   const [values, setValues] = useState({
@@ -29,6 +33,8 @@ function Login() {
         // Login successful
         if (response.data.success) {
           alert(response.data.message);
+          setIsLoggedIn(true);
+
 
           // Redirect to the page indicated by backend (user or Superuser)
           navigate(response.data.redirectTo); 

@@ -18,11 +18,13 @@ app.use(bodyParser.json());
 const userRoutes = require("./routes/userRoutes");
 const sellRoutes = require("./routes/sellRoutes");
 const rentRoutes = require("./routes/rentRoutes");
+const superuserRoutes = require("./routes/superuserRoutes");
 
 // Use routes
 app.use("/api", userRoutes); // All user-related routes
 app.use("/api", sellRoutes); // All sell-related routes
 app.use("/api", rentRoutes); // All rent-related routes
+app.use("/api", superuserRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {
