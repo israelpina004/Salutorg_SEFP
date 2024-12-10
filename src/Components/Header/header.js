@@ -5,14 +5,36 @@ import {FaEnvelopeOpenText, FaShoppingCart, FaUser, FaClipboardList, FaStar, FaC
 import "./header.css";
 import { useState } from "react";
 
-const Header =()=> {
-    const [isLoggedIn, setIsLoggedIn] = useState(true); // Initially logged out; Set true for testing later!
+const Header =({ isLoggedIn, setIsLoggedIn })=> {
+    // const [isLoggedIn, setIsLoggedIn] = useState(false); // Initially logged out; Set true for testing later!
     
-    const handleSignOut = () => {
-        setIsLoggedIn(false);
-        alert("You've signed out. See you soon!")
-    };
-  
+    const handleSignOut = async () => {
+        try {
+          // Send a request to the backend to log out the user
+          const response = await fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/logout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+    
+          const data = await response.json();
+    
+          if (response.ok) {
+            setIsLoggedIn(false); // Update the frontend state
+            alert("You've signed out. See you soon!");
+          } else {
+            alert(`Error signing out: ${data.message}`);
+          }
+        } catch (error) {
+          console.error("Error signing out:", error);
+          alert("Something went wrong while signing out. Please try again.");
+        }
+      };
+
+    //   const handleSignIn = async () => {
+    //     setIsLoggedIn(true);
+    //     console.log("Value:", setIsLoggedIn);
+    //   };
+
     return (
         <>
             <div className="grid-container rounded-md">

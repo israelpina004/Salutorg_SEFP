@@ -101,6 +101,8 @@ CREATE TABLE `sell` (
   PRIMARY KEY (`sell_ID`),
   FOREIGN KEY (`item_ID`) REFERENCES `item`(`item_ID`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+ALTER TABLE user
+ADD COLUMN is_loggedin BOOLEAN DEFAULT FALSE;
 -- Code for "bid" table. Stores top bids on a certain item. ( NEEDS CHANGES )
 -- DROP TABLE IF EXISTS `bid`;
 -- CREATE TABLE `bid` (

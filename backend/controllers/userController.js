@@ -33,7 +33,13 @@ const loginUser = (req, res) => {
     if (results.length > 0) {
       const passwordMatch = await bcrypt.compare(password, results[0].password);
       if (passwordMatch) {
-        return res.json({ success: true, message: "Login successful!", redirectTo: "/home" });
+        // Update the is_loggedin attribute to TRUE
+        const updateSql = "UPDATE user SET is_loggedin = TRUE WHERE username = ?";
+        db.query(updateSql, [username], (updateErr) => {
+          if (updateErr) return res.status(500).json({ error: "Database update error" });
+
+          return res.json({ success: true, message: "Login successful!", redirectTo: "/home" });
+        });
       } else {
         return res.json({ success: false, message: "Invalid username or password." });
       }
@@ -42,6 +48,57 @@ const loginUser = (req, res) => {
     }
   });
 };
+
+const getLoggedInUser = (req, res) => {
+  const sql = "SELECT * FROM user WHERE is_loggedin = TRUE";
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ success: false, message: "Database error." });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ success: false, message: "No users are currently logged in." });
+    }
+
+    // Assuming only one user is logged in
+    const loggedInUser = results[0]; // Get the first logged-in user details
+    return res.json({ success: true, loggedInUser });
+  });
+};
+
+const logoutUser = (req, res) => {
+  const sqlGetLoggedInUser = "SELECT username FROM user WHERE is_loggedin = TRUE";
+
+  // Fetch the currently logged-in user
+  db.query(sqlGetLoggedInUser, (getErr, results) => {
+    if (getErr) {
+      console.error("Database error while fetching logged-in user:", getErr);
+      return res.status(500).json({ success: false, message: "Database error during fetching logged-in user." });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ success: false, message: "No user is currently logged in." });
+    }
+
+    // There should only be one logged-in user based on your website logic
+    const loggedInUser = results[0].username;
+
+    // Proceed to log out the logged-in user
+    const sqlUpdate = "UPDATE user SET is_loggedin = FALSE WHERE username = ?";
+    db.query(sqlUpdate, [loggedInUser], (updateErr, updateResults) => {
+      if (updateErr) {
+        console.error("Database error during logout:", updateErr);
+        return res.status(500).json({ success: false, message: "Database error during logout." });
+      }
+
+      console.log(`User '${loggedInUser}' successfully logged out.`);
+      return res.json({ success: true, message: `Logout successful for user '${loggedInUser}'!` });
+    });
+  });
+};
+
 
 const getUsers = (req, res) => {
   const sql = "SELECT * FROM user";
@@ -73,31 +130,14 @@ const updateBalance = (req, res) => {
   });
 };
 
-const getPendingApprovals = (req, res) => {
-  const query = "SELECT id, email, username, created_at FROM user WHERE status = 'pending'";
-  db.query(query, (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: "Failed to fetch pending approvals." });
-    }
-    res.json(results);
-  });
-};
 
-const approveOrRejectUser = (req, res) => {
-  const { id, action } = req.body;
 
-  if (!["approve", "reject"].includes(action)) {
-    return res.status(400).json({ error: "Invalid action" });
-  }
-
-  const status = action === "approve" ? "approved" : "rejected";
-  const query = "UPDATE user SET status = ? WHERE id = ?";
-  db.query(query, [status, id], (err) => {
-    if (err) {
-      return res.status(500).json({ error: "Failed to update user status." });
-    }
-    res.json({ message: `User ${action}d successfully` });
-  });
-};
-
-module.exports = { registerUser, loginUser, getUsers, getBalance, updateBalance, getPendingApprovals, approveOrRejectUser };
+module.exports = 
+{ registerUser, 
+  loginUser, 
+  getUsers, 
+  getBalance, 
+  updateBalance,
+  logoutUser,
+  getLoggedInUser,
+ };
