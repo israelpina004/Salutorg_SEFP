@@ -3,7 +3,7 @@ import MainContent from "../../Components/Main/MainContent";
 
 const Home =()=> {
     return (
-        <>
+        <> 
             <Header />
             <MainContent />
         </>
