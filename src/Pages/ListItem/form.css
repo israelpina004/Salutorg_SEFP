@@ -1,11 +1,22 @@
 .sell-form {
-  max-width: 600px;
+  max-width: 75%;
   margin: 20px auto;
-  padding: 20px;
+  padding: 60px;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sellrent-title{
+  margin-top: 30px;
+    font-family: 'Rubik', sans-serif;
+    font-size: 45px; 
+    font-weight: bold; 
+    color: hsl(180, 57%, 15%); 
+    margin-bottom: 25px;  
+    text-align: center;
+
 }
 
 .sell-form .listing {
@@ -14,10 +25,12 @@
 }
 
 .sell-form .labels {
-  font-size: 16px;
+  font-size: 19px;
   margin-bottom: 8px;
-  color: #333;
+  color: hsl(180, 57%, 15%); 
+  font-weight: bold;
 }
+
 
 .sell-form input[type="text"],
 .sell-form input[type="number"],
@@ -88,3 +101,4 @@
     margin-top: 10px;
   }
 }
+
