@@ -6,6 +6,6 @@ const upload = multer();
 const router = express.Router();
 
 router.post("/insertNewSell", upload.single("image"), insertSellItem);
-router.get("/readSellItems", getSellItems);
+router.get("/getSellItems", getSellItems);
 
 module.exports = router;

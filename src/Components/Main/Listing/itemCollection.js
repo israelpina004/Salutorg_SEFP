@@ -23,7 +23,7 @@ const ItemCollection = ({ title }) => {
 
   useEffect(()=> {
     console.log("Fetching items...");
-    fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/readSellItems`, {
+    fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/getSellItems`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
