@@ -163,6 +163,31 @@ const updateBalance = (req, res) => {
   });
 };
 
+// Add a comment
+const addComment = (req, res) => {
+  const { userId, username, comment } = req.body;
+
+  const sql = "INSERT INTO comments (userId, username, comment) VALUES (?, ?, ?)";
+  db.query(sql, [userId || null, username, comment], (err, result) => {
+    if (err) {
+      console.error("Error inserting comment:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ success: true, message: "Comment added successfully!" });
+  });
+};
+
+// Get all comments
+const getComments = (req, res) => {
+  const sql = "SELECT * FROM comments ORDER BY createdAt DESC";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching comments:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json(results);
+  });
+};
 
 module.exports = 
 { registerUser, 
@@ -172,4 +197,6 @@ module.exports =
   updateBalance,
   logoutUser,
   getLoggedInUser,
+  addComment, 
+  getComments,
  };

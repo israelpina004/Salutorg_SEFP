@@ -9,6 +9,8 @@ const {
   getUsers,
   logoutUser,
   getLoggedInUser,
+  addComment, 
+  getComments
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -20,6 +22,8 @@ router.post("/getlogin", getLoggedInUser);
 router.post("/logout", logoutUser);
 router.get("/balance/:userId", getBalance);
 router.post("/update-balance", updateBalance);
+router.post("/addcomment", addComment);
+router.get("/getcomment", getComments);
 router.get("/", getUsers);
 
 module.exports = router;
