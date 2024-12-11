@@ -2,10 +2,10 @@ import { useFetchData } from "../../Hooks/useFetchData";
 import ActionCard from "../../Components/Action/actionCard.js";
 
 function SuspensionApproval() {
-  const { data: suspendedUsers, loading, error, setData: setSuspendedUsers } = useFetchData("/api/suspended");
+  const { data: suspendedUsers, loading, error, setData: setSuspendedUsers } = useFetchData("/api/admin/suspended");
 
   const handleRevoke = (userId) => {
-    fetch(`/api/revoke`, {
+    fetch(`/api/admin/revoke`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: userId }),
@@ -17,7 +17,7 @@ function SuspensionApproval() {
   };
 
   const handleKeep = (userId) => {
-    fetch(`/api/keep`, {
+    fetch(`/api/admin/keep`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: userId }),

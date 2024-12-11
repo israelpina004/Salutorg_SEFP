@@ -6,7 +6,7 @@ import "./header.css";
 import { useEffect, useState } from "react";
 
 const Header =()=> {
-     const [isLoggedIn, setIsLoggedInState] = useState(true); // Initially logged out; Set true for testing later!
+     const [isLoggedIn, setIsLoggedInState] = useState(false); // Initially logged out; Set true for testing later!
     
     // Check if the user is already logged in from localStorage on mount
     // useEffect(() => {

@@ -11,11 +11,16 @@ const {
 
   const router = express.Router();
   
-  router.get("/pending-approvals", getPendingApprovals); // admin dashboard.... calls this 
-  router.post("/approve", approveUser); // button 
-  router.post("/reject", rejectUser); // button 
-  router.get("/suspended", getSuspendedUsers); // dashboard 
-  router.post("/revoke", revokeSuspension); // button
-  router.post("/keep", keepSuspension); //button 
+  // Pending approvals
+  router.get("/pending-approvals", getPendingApprovals);
+  
+  // Approve or reject a user
+  router.post("/approve", approveUser);
+  router.post("/reject", rejectUser);
+  
+  // Suspensions
+  router.get("/suspended", getSuspendedUsers);
+  router.post("/revoke", revokeSuspension);
+  router.post("/keep", keepSuspension);
   
   module.exports = router;
