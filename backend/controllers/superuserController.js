@@ -2,20 +2,29 @@ const db = require("../models/db");
 
 // Fetch pending approvals
 const getPendingApprovals = (req, res) => {
-  const query = "SELECT id, email, registration_date FROM user WHERE is_approved = FALSE";
+  const query = `
+    SELECT 
+      user_ID AS id, 
+      email, 
+      DATE_FORMAT(registration_date, '%Y/%m/%d %H:%i:%s') AS registration_date 
+    FROM user 
+    WHERE is_approved = FALSE
+  `;
   db.query(query, (err, results) => {
     if (err) {
-      console.error("Error fetching pending approvals:", err);
+      console.error("Database error:", err);
       return res.status(500).json({ error: "Failed to fetch approvals." });
     }
-    res.json(results);
+
+    console.log("Pending approvals:", results); // Log the data for debugging
+    res.status(200).json(results); // Send JSON response
   });
 };
 
 // Approve a user
 const approveUser = (req, res) => {
   const { id } = req.body;
-  const query = "UPDATE user SET is_approved = TRUE WHERE id = ?";
+  const query = "UPDATE user SET is_approved = TRUE WHERE user_ID = ?";
   db.query(query, [id], (err) => {
     if (err) {
       console.error("Error approving user:", err);
@@ -28,7 +37,7 @@ const approveUser = (req, res) => {
 // Reject a user
 const rejectUser = (req, res) => {
   const { id } = req.body;
-  const query = "DELETE FROM user WHERE id = ?";
+  const query = "DELETE FROM user WHERE user_ID = ?";
   db.query(query, [id], (err) => {
     if (err) {
       console.error("Error rejecting user:", err);
