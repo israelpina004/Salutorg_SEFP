@@ -1,1 +1,6 @@
 make the admin routes protectd.... add styling... make dynamic....
+
+
+TODO: rating system (might have to change database), personalized GUI ("Hello USERNAME"), posting of the listing, actual buying (), comments, Additional logic... if suspended 3 times remove them from the database 
+VIP:(if suspended once never vip, more than 5 transactions, more than 5,000--- put this in the vip definition so that when they get supsended they lose the vip privledge), 
+king of the hill ();

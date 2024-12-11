@@ -1,30 +1,90 @@
-.listing{
-    border: 1px solid black;
-    max-width: auto;
-    margin: 0 auto;
-    text-align: left;
-    padding: 10px;
-    border-radius: 5px;
-    overflow: hidden;
-    max-height: auto;
+.sell-form {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.listing input{
-    padding: 10px;
-    margin: 10px;
-    margin-left: 10px;
-    border-radius: 18px;
-    min-height: 100%;
-    align-items: center;
-    max-width: 500px;
-
-
+.sell-form .listing {
+  display: flex;
+  flex-direction: column;
 }
 
-.listing textarea{
-    margin-left: 10px;
-    border-radius: 18px;
-    height: 200px;
-    width: 90%;
+.sell-form .labels {
+  font-size: 16px;
+  margin-bottom: 8px;
+  color: #333;
 }
 
+.sell-form input[type="text"],
+.sell-form input[type="number"],
+.sell-form input[type="date"],
+.sell-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.sell-form textarea {
+  height: 80px;
+  resize: none;
+}
+
+.sell-form input[type="file"] {
+  margin-top: 10px;
+}
+
+.sell-form button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.sell-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.sell-form button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* Image Preview Section */
+.sell-form .image-preview {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.sell-form .image-preview img {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 10px;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sell-form {
+    padding: 15px;
+  }
+
+  .sell-form button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}

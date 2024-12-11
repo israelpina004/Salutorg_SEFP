@@ -3,7 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Logo2 from "../../Assets/Images/Logo-5.svg";
 
-function Login() {
+const Login = ({ setIsLoggedIn }) => {
+  if (typeof setIsLoggedIn !== "function") {
+    console.error("setIsLoggedIn is not a function. Make sure it's passed from the parent component.");
+  }
+  
   const navigate = useNavigate();
 
   const [values, setValues] = useState({
@@ -11,25 +15,32 @@ function Login() {
     password: ''
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors] = useState({});
 
   const handleInput = (event) => {
-    setValues(prev => ({...prev, [event.target.name] : [event.target.value]}));
+    setValues(prev => ({ ...prev, [event.target.name]: event.target.value }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     if (Object.keys(errors).length === 0) {
       try {
-        const response = await axios.post("http://localhost:8082/login", {
+        const response = await axios.post(`http://localhost:${process.env.REACT_APP_API_PORT}/api/login`, {
           username: values.username,
           password: values.password,
         });
         // Login successful
         if (response.data.success) {
           alert(response.data.message);
-
+          
+          // Set the logged-in status in localStorage
+          console.log("Setting login status to true in localStorage");
+          localStorage.setItem("isLoggedIn", "true");
+          
+          // Update the state to reflect the login status
+          setIsLoggedIn(true);
+  
           // Redirect to the page indicated by backend (user or Superuser)
           navigate(response.data.redirectTo); 
         }

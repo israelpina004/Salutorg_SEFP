@@ -1,5 +1,57 @@
 import { useParams } from "react-router-dom";
 import ItemListingFull from "./itemListingFull";
+import {useState, useEffect} from 'react';
+
+
+
+  function ItemListingPage() {
+    const [items, setItems]=useState([]);
+    const { id } = useParams(); // Get the dynamic ID from the URL
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      console.log("Fetching items...");
+      fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/readSellItems`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Data received:", data);
+          setItems(data.result || []);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Fatoumatas Error: Error fetching items", error);
+          setLoading(false);
+        });
+    }, []);
+    
+    if (loading) {
+      return <p>Loading items...</p>;
+    }
+
+    const item = items.find((item) => item.id === parseInt(id)); // Find the item by ID
+    
+    if (!item) {
+      return <p>Item not found.</p>; // Display error if item is not found
+    }
+    
+    return (
+      <div>
+        <h1>{item.name}</h1>
+        <ItemListingFull
+          image={item.image}
+          name={item.name}
+          currentPrice={item.price}
+          deadline={item.deadline}
+        />
+      </div>
+    );
+}
+
+export default ItemListingPage;
+
 
   // const { id } = useParams(); // Get the dynamic ID from the URL
   // const [item, setItem] = useState(null);
@@ -28,6 +80,8 @@ import ItemListingFull from "./itemListingFull";
   // if (!item) {
   //   return <p>Item not found.</p>;
   // }
+
+  /*
 
   const items = [
     {
@@ -132,27 +186,4 @@ import ItemListingFull from "./itemListingFull";
     },
   ];
 
-  function ItemListingPage() {
-    const { id } = useParams(); // Get the dynamic ID from the URL
-    const item = items.find((item) => item.id === parseInt(id)); // Find the item by ID
-  
-    if (!item) {
-      return <p>Item not found.</p>; // Display error if item is not found
-    }
-  
-  return (
-    <div>
-      <h1>{item.name}</h1>
-        <ItemListingFull
-          image={item.imageURL}
-          name={item.title}
-          currentPrice={item.price}
-          description={item.description}
-          topBid={item.topBid}
-          deadline={item.deadline}
-        />
-    </div>
-  );
-}
-
-export default ItemListingPage;
+  */

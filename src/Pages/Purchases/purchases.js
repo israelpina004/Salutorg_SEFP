@@ -28,7 +28,7 @@ import Header from "../../Components/Header/header";
         return(
             <>
             <Header>Header</Header>
-            <h1 className='title22222'>Purchase History</h1>
+            <h1 className='title'>Purchase History</h1>
             <div>
                 <button onClick={addPurchase}> Add Purchase</button>
             </div>
