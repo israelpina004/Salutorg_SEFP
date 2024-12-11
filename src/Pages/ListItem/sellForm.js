@@ -69,11 +69,11 @@ const SellForm=()=> {
         return (
             <>
                 <Header> </Header>
-                <h1 className="sellrent-title">Sell Form</h1>
+                <h1>Sell Form</h1>
                 <div className="sell-form">
                     <form className="listing">
                         {/* Item Name */}
-                        <label htmlFor="itemName" className="labels">Item Name: <span style={{ color: "red" }}>*</span></label>
+                        <label htmlFor="itemName" className="labels">Item Name:</label>
                         <input
                             id="itemName"
                             type="text"
@@ -84,7 +84,7 @@ const SellForm=()=> {
                         <br />
         
                         {/* Starting Price */}
-                        <label htmlFor="itemStartPrice" className="labels">Item Starting Bid Price: <span style={{ color: "red" }}>*</span></label>
+                        <label htmlFor="itemStartPrice" className="labels">Item Starting Bid Price:</label>
                         <input
                             id="itemStartPrice"
                             type="number"
@@ -95,7 +95,7 @@ const SellForm=()=> {
                         <br />
         
                         {/* Condition */}
-                        <label htmlFor="itemCondition" className="labels">Condition: <span style={{ color: "red" }}>*</span></label>
+                        <label htmlFor="itemCondition" className="labels">Condition:</label>
                         <input
                             id="itemCondition"
                             type="text"
@@ -106,7 +106,7 @@ const SellForm=()=> {
                         <br />
         
                         {/* Category */}
-                        <label htmlFor="itemCategory" className="labels">Category: <span style={{ color: "red" }}>*</span></label>
+                        <label htmlFor="itemCategory" className="labels">Category:</label>
                         <input
                             id="itemCategory"
                             type="text"
@@ -117,7 +117,7 @@ const SellForm=()=> {
                         <br />
         
                         {/* Deadline */}
-                        <label htmlFor="itemDeadline" className="labels">Bidding Deadline: <span style={{ color: "red" }}>*</span></label>
+                        <label htmlFor="itemDeadline" className="labels">Bidding Deadline:</label>
                         <input
                             id="itemDeadline"
                             type="date"
@@ -128,7 +128,7 @@ const SellForm=()=> {
                         <br />
         
                         {/* Description */}
-                        <label htmlFor="itemDescription" className="labels">Description: <span style={{ color: "red" }}>*</span></label>
+                        <label htmlFor="itemDescription" className="labels">Description:</label>
                         <textarea
                             id="itemDescription"
                             required

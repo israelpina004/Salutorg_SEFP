@@ -20,13 +20,11 @@ const RentForm=()=> {
 
         const data=new FormData();
         data.append('name', itemName);
-        data.append('rate', parseFloat(itemRate, 10));
+        data.append('rate', itemRate);
         data.append('description', itemDescription);
         data.append('condition', itemCondition);
         data.append('category', itemCategory);
-        if (itemImage) {
-            data.append("url", itemImage);
-          }
+        data.append('url', itemImage);
 
 
 
@@ -51,10 +49,10 @@ const RentForm=()=> {
     return( 
         <>
         <Header> </Header>
-        <h1 className="sellrent-title">Rent Form</h1>
+        <h1>Rent</h1>
         <div className="sell-form">
             <form className="listing">
-            <label className="labels">Item Name: <span style={{ color: "red" }}>*</span></label>
+            <label className="labels">Item Name: </label>
             <input
                 type="text"
                 required
@@ -62,7 +60,7 @@ const RentForm=()=> {
                 onChange={(e) => setName(e.target.value)}
             ></input>
         <br />
-            <label className="labels">Item Rate per Day: <span style={{ color: "red" }}>*</span></label>
+            <label >Item Rate per Day: </label>
             <input
                 type="number"
                 required
@@ -71,7 +69,7 @@ const RentForm=()=> {
             ></input>
         <br />
         <br />
-        <label className="labels">Condition: <span style={{ color: "red" }}>*</span></label>
+        <label >Condition: </label>
             <input
                 type="text"
                 required
@@ -79,7 +77,7 @@ const RentForm=()=> {
                 onChange={(e) => setCondition(e.target.value)}
             ></input>
         <br />
-        <label className="labels">Category: <span style={{ color: "red" }}>*</span></label>
+        <label >Category: </label>
             <input
                 type="text"
                 required
@@ -87,7 +85,7 @@ const RentForm=()=> {
                 onChange={(e) => setCategory(e.target.value)}
             ></input>
         <br />
-            <label className="labels">Description: <span style={{ color: "red" }}>*</span></label>
+            <label className="labels">Description: </label>
             <textarea 
                 type="text"
                 required            
@@ -101,10 +99,7 @@ const RentForm=()=> {
                 onChange={(e)=>setImage(e.target.files[0])}
             ></input>
             </form>
-            {/* Submit Button */}
-            <button onClick={sendData} disabled={!itemName || !itemRate || !itemDescription || !itemCondition || !itemCategory }>
-                        Submit Listing
-                    </button>
+            <button onClick={sendData}>Submit Listing</button>
         </div> 
         </>
     )

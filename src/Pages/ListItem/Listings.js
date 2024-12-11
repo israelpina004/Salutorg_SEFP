@@ -9,7 +9,7 @@ import './listing.css';
 
 function RentalPage(){
 
-    const [items, setItems]=useState([]);
+    const [idk, setidk]=useState([]);
     const [empty, setEmpty]=useState(true);
 
     useEffect(()=>{
@@ -24,14 +24,14 @@ function RentalPage(){
             console.log("data received:", data);
             console.log("Data:", data);
             
-            setItems(data.result)
-            console.log("items:", data.result);
+            setidk(data.result)
+            console.log("idk:", data.result);
             if(data.result.length!==0){
                 setEmpty(false);
             }
         })
         .catch((error)=>{
-            console.error("My Error: ", error);
+            console.error("Fatoumatas Error: ", error);
         });
 
     }, []) 
@@ -39,13 +39,13 @@ function RentalPage(){
     if(empty){
         return(
             <>
-            <p className="noitems">No items to list yet</p>
-            </>
+        <p>No items yet</p>
+        </>
         )
     }
 
 
-    const itemsList=items.map(item =>
+    const itemsList=idk.map(item =>
         <div className='purchase'>
             <img className="purchase-image" src={`data:image/jpeg;base64,${item.image}`} alt="Item" />
             <div className='purchase-info'>
@@ -106,7 +106,7 @@ function SellPage(){
             }
         })
         .catch((error)=>{
-            console.error("My Error: ", error);
+            console.error("Fatoumatas Error: ", error);
         });
 
     }, []) 
@@ -114,7 +114,7 @@ function SellPage(){
         return (
         <>
             <div>
-            <p className="noitems">No items to list yet</p>
+            <p>No items to List yet</p>
             </div>
         </>
         )
@@ -165,22 +165,22 @@ const Listings=()=> {
         return(
             <>
             <Header></Header>
-            <h1 className="listings-title">Listings</h1>
+            <h1 className="listings-title"><b>Listings</b></h1>
             <div className="list-button">
             <Link to="/sell-form"><button className="rent_sell-button">Sell an Item</button></Link>
             <Link to="/rent-form">< button className="rent_sell-button">Rent an Item</button></Link>
             </div>
 
-            <div className="tabs-container">
-                <button className={`tab ${currentPage === "sell" ? "active-tab" : ""}`} 
-                onClick={()=>setPage("sell")}>Sell Page</button>
-
-                <button className={`tab ${currentPage === "rent" ? "active-tab" : ""}`} 
-                onClick={()=>setPage("rent")}>Rent Page</button>
+            <div className="tab-container">
+                <button className="tab" onClick={()=>setPage("sell")}>Sell Page</button>
+                <button className="tab" onClick={()=>setPage("rent")}>Rent Page</button>
             </div>
-
             {currentPage=== "sell" && <SellPage />}
             {currentPage=== "rent" && <RentalPage />}
+
+            
+            
+            
 
             </>
         )

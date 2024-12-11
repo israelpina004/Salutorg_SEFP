@@ -6,7 +6,7 @@ import "./header.css";
 import { useEffect, useState } from "react";
 
 const Header =()=> {
-     const [isLoggedIn, setIsLoggedInState] = useState(false); // Initially logged out; Set true for testing later!
+    // const [isLoggedIn, setIsLoggedIn] = useState(false); // Initially logged out; Set true for testing later!
     
     // Check if the user is already logged in from localStorage on mount
     // useEffect(() => {
@@ -17,13 +17,12 @@ const Header =()=> {
     //         setIsLoggedIn(false);
     //     }
     // }, [setIsLoggedIn]); // Make sure it runs only once on mount
-/*
+
     const [isLoggedIn, setIsLoggedInState] = useState(() => {
         const storedStatus = localStorage.getItem("isLoggedIn");
         console.log("Initial login status from localStorage:", storedStatus); // Debugging line
         return storedStatus === "true";
     });
-*/
     
     // Sync changes to localStorage and setIsLoggedIn state
     useEffect(() => {
@@ -131,11 +130,16 @@ const Header =()=> {
                                     <li className="dropdown_item">
                                         <FaClipboardList className="icon2" /> 
                                         <Link to="/purchases"> Purchases </Link>
+
+                                        <li className="dropdown_item">
+                                            <FaEnvelopeOpenText className="icon7" /> 
+                                            <Link to="/listings">Listings</Link>
+                                        </li>
                                     </li>
                                     <li className="dropdown_item">
-                                        <FaStar className="icon7" /> 
-                                        <Link to="/listings">  Listings</Link>
-                                    </li>                               
+                                        <FaStar className="icon3" /> 
+                                        <Link to = "/listing"> Item Listing </Link>
+                                    </li>
                                     <li className="dropdown_item">
                                         <FaCog className="icon4" /> 
                                         <Link to = "/profile"> Account Settings </Link>
