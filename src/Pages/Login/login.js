@@ -23,7 +23,7 @@ const Login = ({ setIsLoggedIn }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+  
     if (Object.keys(errors).length === 0) {
       try {
         const response = await axios.post(`http://localhost:${process.env.REACT_APP_API_PORT}/api/login`, {
@@ -33,9 +33,14 @@ const Login = ({ setIsLoggedIn }) => {
         // Login successful
         if (response.data.success) {
           alert(response.data.message);
+          
+          // Set the logged-in status in localStorage
+          console.log("Setting login status to true in localStorage");
+          localStorage.setItem("isLoggedIn", "true");
+          
+          // Update the state to reflect the login status
           setIsLoggedIn(true);
-
-
+  
           // Redirect to the page indicated by backend (user or Superuser)
           navigate(response.data.redirectTo); 
         }

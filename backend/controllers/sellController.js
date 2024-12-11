@@ -4,6 +4,11 @@ const insertSellItem = (req, res) => {
   const { name, description, item_condition, category, starting_price, deadline } = req.body;
   const image = req.file ? req.file.buffer : null;
 
+  // Log received data to make sure everything is passed correctly
+  console.log({
+    name, description, item_condition, category, starting_price, deadline, image
+  });
+
   // Insert into `item` table first
   const itemSql = `
     INSERT INTO item (name, description, item_condition, category, image) 

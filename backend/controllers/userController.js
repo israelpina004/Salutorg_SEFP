@@ -119,17 +119,49 @@ const getBalance = (req, res) => {
   });
 };
 
+// const updateBalance = (req, res) => {
+//   const { userId, amount } = req.body;
+//   const query = "UPDATE user SET balance = balance + ? WHERE user_ID = ?";
+//   db.query(query, [amount, userId], (err, results) => {
+//     if (err) {
+//       return res.status(500).json({ error: err.message });
+//     }
+//     res.json({ success: true });
+//   });
+// };
+
 const updateBalance = (req, res) => {
   const { userId, amount } = req.body;
+  const numericAmount = Number(amount);
+
+  if (isNaN(numericAmount)) {
+    return res.status(400).json({ error: "Invalid amount" });
+  }
+
+  // Update the balance
   const query = "UPDATE user SET balance = balance + ? WHERE user_ID = ?";
-  db.query(query, [amount, userId], (err, results) => {
+  db.query(query, [numericAmount, userId], (err, results) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     }
-    res.json({ success: true });
+
+    // Query to get the updated balance
+    const selectQuery = "SELECT balance FROM user WHERE user_ID = ?";
+    db.query(selectQuery, [userId], (err, rows) => {
+      if (err) {
+        return res.status(500).json({ error: err.message });
+      }
+
+      // Check if we have balance and return it in the response
+      if (rows.length > 0) {
+        console.log("Updated balance:", rows[0].balance); // Log updated balance
+        res.json({ success: true, balance: rows[0].balance }); // Return the balance in the response
+      } else {
+        res.status(404).json({ error: "User not found" });
+      }
+    });
   });
 };
-
 
 
 module.exports = 
