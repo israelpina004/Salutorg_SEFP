@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Balance = () => {
   const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState(""); // New state to store username
   const [balance, setBalance] = useState(0);
   const [amount, setAmount] = useState("");
 
@@ -21,6 +23,7 @@ const Balance = () => {
       .then((data) => {
         if (data && data.loggedInUser) {
           setUserId(data.loggedInUser.user_ID); // Use the user_ID from response
+          setUsername(data.loggedInUser.username); // Set the username
           setBalance(data.loggedInUser.balance); // Set the initial balance
         } else {
           console.error("No user is currently logged in.");
@@ -76,20 +79,28 @@ const Balance = () => {
   }
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>Account Balance: ${Number(balance || 0).toFixed(2)}</h1>
-      <input
-        type="number"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-        placeholder="Enter amount"
-        style={{ marginRight: "10px" }}
-      />
-      <button onClick={handleDeposit} style={{ marginRight: "10px" }}>
-        Deposit
-      </button>
-      <button onClick={handleWithdraw}>Withdraw</button>
-    </div>
+    <>
+      <div className="auth-title">{username}'s Balance: ${Number(balance || 0).toFixed(2)}</div> {/* Display username */}
+      <div className="auth-form-container">
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Enter amount"
+          style={{ marginRight: "10px" }}
+        />
+        <button onClick={handleDeposit} className="auth-submit-button" style={{ marginRight: "10px" }}>
+          Deposit
+        </button>
+        <button onClick={handleWithdraw} className="auth-submit-button">Withdraw</button>
+      </div>
+
+      {/* Link to the Profile page */}
+      <div className="auth-form-container">
+        <Link to="/profile">Account Settings</Link>
+      </div>
+
+    </>
   );
 };
 

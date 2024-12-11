@@ -71,39 +71,6 @@ const Header =()=> {
                         </svg>
 
                         </a>
-                        <div className="dropdown">
-                            <div className="link">
-                                <span className="label">Solutions</span>
-                                    <button type="button" className="caret">
-                                    <IoMdArrowDropdown/>
-                                    </button>
-                            </div>
-                            <div className="menu-wrap" id="dropdownMenu">
-                                <ul className="menu">
-                                    <li className="sub-link sub-item">
-                                        <a href="/">Something1</a>
-                                    </li>
-                                    <li className="sub-link sub-item">
-                                        <a href="/">Website link #2</a>
-                                    </li>
-                                    <li className="sub-link sub-item">
-                                        <a href="/">Website link #3</a>
-                                    </li>
-                                    <li className="sub-link sub-item">
-                                        <a href="/">Website link #4</a>
-                                    </li>
-                                    <li className="sub-link sub-item">
-                                        <a href="/">Website link #5</a>
-                                    </li>
-                                    <li className="sub-link sub-item">
-                                        <a href="/">Website link #6</a>
-                                    </li>
-                                    <li className="sub-link sub-item">
-                                        <a href="/">Website link #7</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
                     </div>
       
                     <div className="nav-middle">

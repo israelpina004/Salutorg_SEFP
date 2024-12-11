@@ -1,19 +1,60 @@
 const db = require("../models/db");
 
+// const insertSellItem = (req, res) => {
+//   const { name, description, item_condition, category, starting_price, deadline } = req.body;
+//   const image = req.file ? req.file.buffer : null;
+
+//   // Log received data to make sure everything is passed correctly
+//   console.log({
+//     name, description, item_condition, category, starting_price, deadline, image
+//   });
+
+//   // Insert into `item` table first
+//   const itemSql = `
+//     INSERT INTO item (name, description, item_condition, category, image) 
+//     VALUES (?, ?, ?, ?, ?);
+//   `;
+//   const itemValues = [name, description, item_condition, category, image];
+
+//   db.query(itemSql, itemValues, (err, result) => {
+//     if (err) {
+//       console.error("Database error:", err.message);
+//       return res.status(500).json({ error: "Failed to insert item" });
+//     }
+
+//     const itemId = result.insertId;
+
+//     // Insert into `sell` table
+//     const sellSql = `
+//       INSERT INTO sell (item_ID, starting_price, deadline) 
+//       VALUES (?, ?, ?);
+//     `;
+//     const sellValues = [itemId, starting_price, deadline];
+
+//     db.query(sellSql, sellValues, (err) => {
+//       if (err) {
+//         console.error("Database error:", err.message);
+//         return res.status(500).json({ error: "Failed to insert sell details" });
+//       }
+
+//       res.status(200).json({ message: "Sell item inserted successfully" });
+//     });
+//   });
+// };
+
 const insertSellItem = (req, res) => {
-  const { name, description, item_condition, category, starting_price, deadline } = req.body;
+  const { name, description, item_condition, category, starting_price, deadline, userId } = req.body; // Get userId from request body
   const image = req.file ? req.file.buffer : null;
 
   // Log received data to make sure everything is passed correctly
   console.log({
-    name, description, item_condition, category, starting_price, deadline, image
+    name, description, item_condition, category, starting_price, deadline, image, userId
   });
 
-  // Insert into `item` table first
-  const itemSql = `
-    INSERT INTO item (name, description, item_condition, category, image) 
-    VALUES (?, ?, ?, ?, ?);
-  `;
+  // Insert into item table first
+  const itemSql = 
+    `INSERT INTO item (name, description, item_condition, category, image) 
+    VALUES (?, ?, ?, ?, ?);`;
   const itemValues = [name, description, item_condition, category, image];
 
   db.query(itemSql, itemValues, (err, result) => {
@@ -24,12 +65,11 @@ const insertSellItem = (req, res) => {
 
     const itemId = result.insertId;
 
-    // Insert into `sell` table
-    const sellSql = `
-      INSERT INTO sell (item_ID, starting_price, deadline) 
-      VALUES (?, ?, ?);
-    `;
-    const sellValues = [itemId, starting_price, deadline];
+    // Insert into sell table, including seller_ID (userId)
+    const sellSql = 
+      `INSERT INTO sell (item_ID, starting_price, deadline, seller_ID) 
+      VALUES (?, ?, ?, ?);`; // Add seller_ID field
+    const sellValues = [itemId, starting_price, deadline, userId]; // Include userId in values
 
     db.query(sellSql, sellValues, (err) => {
       if (err) {

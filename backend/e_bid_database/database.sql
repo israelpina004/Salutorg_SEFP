@@ -108,6 +108,10 @@ CREATE TABLE `rent` (
   PRIMARY KEY (`rent_ID`),
   FOREIGN KEY (`item_ID`) REFERENCES `item`(`item_ID`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+ALTER TABLE `rent`
+ADD COLUMN `renter_ID` INT NOT NULL, 
+ADD CONSTRAINT `fk_renter`
+FOREIGN KEY (`renter_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE;
 
 -- Code for "sell" table. Holds information about items posted for sale.
 DROP TABLE IF EXISTS `sell`;
@@ -121,6 +125,65 @@ CREATE TABLE `sell` (
     PRIMARY KEY (`sell_ID`),
     FOREIGN KEY (`item_ID`) REFERENCES `item`(`item_ID`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+ALTER TABLE `sell`
+ADD COLUMN `seller_ID` INT NOT NULL, 
+ADD CONSTRAINT `fk_seller`
+FOREIGN KEY (`seller_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE;
+
+-- Code for "purchases" table. Records who bought what.
+DROP TABLE IF EXISTS `transactions`;
+
+CREATE TABLE `transactions` (
+	`transaction_ID` INT NOT NULL AUTO_INCREMENT,
+    `customer_ID` INT NOT NULL,
+    PRIMARY KEY (`transaction_ID`),
+    FOREIGN KEY (`customer_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE
+);
+
+DELIMITER //
+
+CREATE PROCEDURE set_vip_status(IN p_user_ID INT)
+BEGIN
+  DECLARE current_balance DECIMAL(10, 2);
+  DECLARE sold_items INT;
+  DECLARE bought_items INT;
+  DECLARE current_suspended INT;
+  DECLARE total_transactions INT;
+
+  -- Step 1: Get the current balance of the user
+  SELECT balance INTO current_balance
+  FROM `user`
+  WHERE user_ID = p_user_ID;
+
+  -- Step 2: Get the count of items sold by the user
+  SELECT COUNT(*) INTO sold_items
+  FROM `sell`
+  WHERE seller_ID = p_user_ID;
+
+  -- Step 3: Get the count of items bought by the user
+  SELECT COUNT(*) INTO bought_items
+  FROM `transactions`
+  WHERE customer_ID = p_user_ID;
+
+  -- Step 4: Get the count_suspended for the user
+  SELECT count_suspended INTO current_suspended
+  FROM `user`
+  WHERE user_ID = p_user_ID;
+
+  -- Step 5: Check if the user meets the criteria
+  IF current_balance > 5000 AND (sold_items + bought_items) > 5 AND current_suspended = 0 THEN
+    -- Step 6: Set the user's VIP status to TRUE
+    UPDATE `user`
+    SET VIP_status = TRUE
+    WHERE user_ID = p_user_ID;
+  ELSE
+    -- If not eligible, do nothing or you can add an optional message or flag
+    SELECT 'User does not meet VIP criteria' AS status;
+  END IF;
+END //
+
+DELIMITER ;
+
 
 -- Code for "bid" table. Stores top bids on a certain item. ( NEEDS CHANGES )
 -- DROP TABLE IF EXISTS `bid`;
