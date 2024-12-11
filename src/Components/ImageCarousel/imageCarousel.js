@@ -5,21 +5,21 @@ import "./imageCarousel.css";
 const carouselData = [
   {
     imageUrl:
-      "https://vastphotos.com/files/uploads/photos/10310/large-format-photo-print-of-mountains-and-lakes-l.jpg?v=20220712073521",
-    title: "Item 1",
-    link: "https://example.com/image",
+      "https://images.unsplash.com/photo-1720048171596-6a7c81662434?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: "Name Brand for Cheap",
+    link: "https://images.unsplash.com/photo-1720048171596-6a7c81662434?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     imageUrl:
-      "https://images.unsplash.com/photo-1454023492550-5696f8ff10e1?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
-    title: "Item 2",
-    link: "https://example.com/singles",
+      "https://images.unsplash.com/photo-1721332150382-d4114ee27eff?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: "Get Professional Services",
+    link: "https://images.unsplash.com/photo-1721332150382-d4114ee27eff?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     imageUrl:
-      "https://wallpapers.com/images/hd/wooden-cottage-sea-high-resolution-d7fahhz6phtkdveh.jpg",
-    title: "Item 3",
-    link: "https://example.com/sealed-packs",
+      "https://images.unsplash.com/photo-1733492866460-0d1151f17b0a?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: "Style on a Budget",
+    link: "https://images.unsplash.com/photo-1733492866460-0d1151f17b0a?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ];
 
@@ -85,7 +85,7 @@ const ImageCarousel = () => {
       }}
     >
       <div className="carousel-content">
-        <h1 className="heading-special">Trending Items</h1>
+        <h1 className="heading-special">Salutorg</h1>
         {carouselData[currentIndex]?.link && (
           <a
             href={carouselData[currentIndex].link}

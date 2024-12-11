@@ -3,16 +3,61 @@ import { IoMdSearch } from "react-icons/io";
 import { IoMdArrowDropdown } from "react-icons/io";
 import {FaEnvelopeOpenText, FaShoppingCart, FaUser, FaClipboardList, FaStar, FaCog, FaSignOutAlt } from "react-icons/fa";
 import "./header.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Header =()=> {
-    const [isLoggedIn, setIsLoggedIn] = useState(true); // Initially logged out; Set true for testing later!
+    // const [isLoggedIn, setIsLoggedIn] = useState(false); // Initially logged out; Set true for testing later!
     
-    const handleSignOut = () => {
-        setIsLoggedIn(false);
-        alert("You've signed out. See you soon!")
+    // Check if the user is already logged in from localStorage on mount
+    // useEffect(() => {
+    //     const loggedInStatus = localStorage.getItem("isLoggedIn");
+    //     if (loggedInStatus === "true") {
+    //         setIsLoggedIn(true);
+    //     } else {
+    //         setIsLoggedIn(false);
+    //     }
+    // }, [setIsLoggedIn]); // Make sure it runs only once on mount
+
+    const [isLoggedIn, setIsLoggedInState] = useState(() => {
+        const storedStatus = localStorage.getItem("isLoggedIn");
+        console.log("Initial login status from localStorage:", storedStatus); // Debugging line
+        return storedStatus === "true";
+    });
+    
+    // Sync changes to localStorage and setIsLoggedIn state
+    useEffect(() => {
+        // Persist login status in localStorage whenever it changes
+        localStorage.setItem("isLoggedIn", isLoggedIn ? "true" : "false");
+    }, [isLoggedIn]);  // Only update when `isLoggedIn` changes
+
+    const handleSignOut = async () => {
+        try {
+        // Send a request to the backend to log out the user
+        const response = await fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/logout`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            setIsLoggedInState(false); // Update the frontend state
+            localStorage.setItem("isLoggedIn", "false"); // Persist logout status
+            alert("You've signed out. See you soon!");
+        } else {
+            alert(`Error signing out: ${data.message}`);
+        }
+        } catch (error) {
+        console.error("Error signing out:", error);
+        alert("Something went wrong while signing out. Please try again.");
+        }
     };
-  
+
+    //   const handleSignIn = async () => {
+    //     setIsLoggedIn(true);
+    //     console.log("Value:", setIsLoggedIn);
+    //   };
+
     return (
         <>
             <div className="grid-container rounded-md">

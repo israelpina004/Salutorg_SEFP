@@ -1,5 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css"
 import './App.css';
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home/home";
 import Login from "./Pages/Login/login";
@@ -17,14 +18,17 @@ import Profile from "./Pages/Profile/view_profile";
 import PaymentDetails from "./Pages/Profile/PaymentDetails";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  console.log("App state:", { isLoggedIn });
   return (
     <>
     <BrowserRouter>
       <Routes>
         {/* Public Routes */}
-        <Route index element={<Home />} />
-        <Route path = "/home" element={<Home/>} />
-        <Route path = "/login" element={<Login />} />
+        <Route index element={<Home isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/home" element={<Home isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path = "/register" element={<Register />} />
         <Route path="/app-submitted" element={<ApplicationSubmit />} />
         <Route path="/purchases" element={<Purchases />} />
