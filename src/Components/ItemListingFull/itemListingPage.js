@@ -22,7 +22,7 @@ import {useState, useEffect} from 'react';
           setLoading(false);
         })
         .catch((error) => {
-          console.error("Fatoumatas Error: Error fetching items", error);
+          console.error("My Error: Error fetching items", error);
           setLoading(false);
         });
     }, []);
