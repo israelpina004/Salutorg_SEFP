@@ -11,7 +11,7 @@ import {useState, useEffect} from 'react';
 
     useEffect(() => {
       console.log("Fetching items...");
-      fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/getSellItems`, {
+      fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/readSellItems`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       })
@@ -22,7 +22,7 @@ import {useState, useEffect} from 'react';
           setLoading(false);
         })
         .catch((error) => {
-          console.error("Error fetching items", error);
+          console.error("Fatoumatas Error: Error fetching items", error);
           setLoading(false);
         });
     }, []);
