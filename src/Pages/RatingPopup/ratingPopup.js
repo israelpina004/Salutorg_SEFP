@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './ratingPopup.css';
 
-const RatingPopup = ({ show, onClose, item }) => {
+const RatingPopup = ({ show, onClose, onSubmitRating, item }) => {
     const [rating, setRating] = useState(null);
     const [hoveredRating, setHoveredRating] = useState(null);
 

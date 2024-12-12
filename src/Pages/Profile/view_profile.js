@@ -1,42 +1,46 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import React, { useState, useEffect } from "react";
-import Logo2 from "../../Assets/Images/Logo-5.svg"
+import Logo2 from "../../Assets/Images/Logo-5.svg";
 
 const Profile = () => {
-    const [username, setUsername] = useState(""); // New state to store username
-    const [registrationDate, setRegistrationDate] = useState("");
-      // Fetch logged-in user and their balance
-      useEffect(() => {
+    const [username, setUsername] = useState(""); // State to store username
+    const [registrationDate, setRegistrationDate] = useState(""); // State to store registration date
+    const [rating, setRating] = useState(null); // State to store user rating
+    const [VIPStatus, setVIPStatus] = useState(false); // State to store VIP status
+
+    // Fetch logged-in user data
+    useEffect(() => {
         fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/getlogin`, {
-          method: "POST",
+            method: "POST",
         })
-          .then((res) => {
-            if (!res.ok) {
-              return res.json().then((error) => {
-                throw new Error(`Failed to fetch logged-in user: ${error.message}`);
-              });
-            }
-            return res.json();
-          })
-          .then((data) => {
-            if (data && data.loggedInUser) {
-              setUsername(data.loggedInUser.username); // Set the username
-              setRegistrationDate(data.loggedInUser.registration_date.split("T")[0]);
-              
-            } else {
-              console.error("No user is currently logged in.");
-            }
-          })
-          .catch((err) => console.error("Error fetching logged-in user:", err));
-      }, []);
+            .then((res) => {
+                if (!res.ok) {
+                    return res.json().then((error) => {
+                        throw new Error(`Failed to fetch logged-in user: ${error.message}`);
+                    });
+                }
+                return res.json();
+            })
+            .then((data) => {
+                if (data && data.loggedInUser) {
+                    setUsername(data.loggedInUser.username); // Set the username
+                    setRegistrationDate(data.loggedInUser.registration_date.split("T")[0]); // Set the registration date
+                    setRating(data.loggedInUser.rating); // Set the user rating
+                    setVIPStatus(data.loggedInUser.VIP_status); // Set the VIP status
+                } else {
+                    console.error("No user is currently logged in.");
+                }
+            })
+            .catch((err) => console.error("Error fetching logged-in user:", err));
+    }, []);
 
     return (
         <>
             <div id="ProfilePage" className="container-fluid bg-white min-vh-100">
                 {/* Header with Logo */}
                 <div className="w-100 d-flex align-items-center justify-content-center p-3 border-bottom border-gray-300">
-                    <Link to= "/" className = "btn btn-link" style = {{minWidth: 120}}>
-                        <img width = {120} src = { Logo2 } alt="" />
+                    <Link to="/" className="btn btn-link" style={{ minWidth: 120 }}>
+                        <img width={120} src={Logo2} alt="Logo" />
                     </Link>
                 </div>
 
@@ -46,16 +50,6 @@ const Profile = () => {
                         <li className="nav-item">
                             <Link className="nav-link active" to="/profile">
                                 Account
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/security">
-                                Security
-                            </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link className="nav-link" to="/addresses">
-                                Addresses
                             </Link>
                         </li>
                         <li className="nav-item">
@@ -78,6 +72,12 @@ const Profile = () => {
                                 </p>
                                 <p>
                                     <strong>Member Since:</strong> {registrationDate}
+                                </p>
+                                <p>
+                                    <strong>Rating:</strong> {rating !== null ? rating : "No rating yet"}
+                                </p>
+                                <p>
+                                    <strong>VIP status:</strong> {VIPStatus ? "VIP" : "NOT VIP"}
                                 </p>
                                 <button className="btn btn-outline-dark">
                                     Edit public profile

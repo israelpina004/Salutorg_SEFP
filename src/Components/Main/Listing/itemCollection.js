@@ -38,28 +38,33 @@ const ItemCollection = ({ title, isMyListings }) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.loggedInUser) {
+          console.log("Logged in user ID:", data.loggedInUser.user_ID);
           setUserId(data.loggedInUser.user_ID);
         }
       })
       .catch((err) => console.error("Error fetching logged-in user:", err));
   }, []);
 
-  // Fetch all items and filter them
+  // Fetch and filter items
   useEffect(() => {
-    fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/readSellItems`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.result) {
-          const filteredItems = data.result.filter((item) =>
-            isMyListings ? item.seller_ID === userId : item.seller_ID !== userId
-          );
-          setItems(filteredItems);
-        }
+    if (userId !== null) { // Wait until userId is set
+      fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/readSellItems`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
       })
-      .catch((err) => console.error("Error fetching items:", err));
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.result) {
+            console.log("Fetched items:", data.result);
+            const filteredItems = data.result.filter((item) =>
+              isMyListings ? item.seller_ID === userId : item.seller_ID !== userId
+            );
+            console.log("Filtered items:", filteredItems);
+            setItems(filteredItems);
+          }
+        })
+        .catch((err) => console.error("Error fetching items:", err));
+    }
   }, [userId, isMyListings]);
 
   return (
@@ -89,6 +94,7 @@ const ItemCollection = ({ title, isMyListings }) => {
     </div>
   );
 };
+
 
 export default ItemCollection;
 

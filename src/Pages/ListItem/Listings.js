@@ -258,7 +258,11 @@ function SellPage() {
   
     const itemsList = items.map((item) => (
         <div className="purchase" key={item.id}> {/* Ensure 'id' is correct */}
-          <img className="purchase-image" src={`data:image/jpeg;base64,${item.image}`} alt="Item" />
+          <img 
+            className="purchase-image" 
+            src={item.image ? `data:image/jpeg;base64,${item.image}` : "path/to/placeholder.jpg"} 
+            alt="Item"
+          />
           <div className="purchase-info">
             <b>Listing Title:</b> {item.name} <br />
             <b>Condition:</b> {item.item_condition} <br />

@@ -97,7 +97,9 @@ const getSellItems = (req, res) => {
     FROM 
       item
     INNER JOIN 
-      sell ON item.item_ID = sell.item_ID;
+      sell ON item.item_ID = sell.item_ID
+    WHERE 
+      sell.status != 'sold';  -- Exclude sold items
   `;
 
   db.query(sql, (err, results) => {
@@ -108,7 +110,7 @@ const getSellItems = (req, res) => {
 
     const itemsWithBase64 = results.map((item) => {
       if (item.image) {
-        item.image = item.image.toString("base64");
+        item.image = item.image.toString("base64"); // Convert image buffer to base64
       }
       return item;
     });

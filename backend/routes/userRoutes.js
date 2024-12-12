@@ -11,7 +11,9 @@ const {
   getLoggedInUser,
   addComment, 
   getComments,
-  acceptBid
+  acceptBid,
+  updateRating,
+  getPurchases
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -27,5 +29,9 @@ router.post("/addcomment", addComment);
 router.get("/getcomment", getComments);
 router.get("/", getUsers);
 router.post("/acceptBid", acceptBid);
+router.post("/updaterating", updateRating)
+router.post("/getPurchases", getPurchases);
+
+
 
 module.exports = router;
