@@ -200,5 +200,5 @@ module.exports =
   updateBalance,
   logoutUser,
   getLoggedInUser,
- updateRating,
+  updateRating,
  };
