@@ -178,9 +178,9 @@ const Listings=()=> {
                 <button className={`tab ${currentPage === "rent" ? "active-tab" : ""}`} 
                 onClick={()=>setPage("rent")}>Rent Page</button>
             </div>
-
+            
             {currentPage=== "sell" && <SellPage />}
-            {currentPage=== "rent" && <RentalPage />}
+            {currentPage=== "rent" && <RentalPage />}       
 
             </>
         )

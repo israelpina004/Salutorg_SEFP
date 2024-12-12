@@ -52,7 +52,7 @@ const RentForm=()=> {
         <>
         <Header> </Header>
         <h1 className="sellrent-title">Rent Form</h1>
-        <div className="sell-form">
+        <div className="sell-rent-form">
             <form className="listing">
             <label className="labels">Item Name: <span style={{ color: "red" }}>*</span></label>
             <input
