@@ -41,16 +41,28 @@ const Profile = () => {
                         <img width={120} src={Logo2} alt="Logo" />
                     </Link>
                 </div>
-                <p align="center">
-                    <i>Click the logo above to go back to the homepage!</i>
-                </p>
+
+                {/* Tabs Navigation */}
+                <div className="tabs-container w-100 p-3 border-bottom border-gray-300">
+                    <ul className="nav nav-tabs justify-content-center">
+                        <li className="nav-item">
+                            <span className="nav-link active">Account</span>
+                        </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/payment-details">
+                                Payment Details
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
 
                 {/* About Section */}
                 <div className="container p-4">
                     <div className="row">
+                        {/* About You */}
                         <div className="col-md-6 mb-4">
                             <div className="card shadow-sm p-4">
-                                <h5 align="center">About You</h5>
+                                <h5>About You</h5>
                                 {error ? (
                                     <p style={{ color: "red" }}>{error}</p>
                                 ) : (
@@ -62,7 +74,7 @@ const Profile = () => {
                                             <b>Email:</b> {user.email}
                                         </p>
                                         <p>
-                                            <b>Rating:</b> {user.rating !== null}
+                                            <b>Rating:</b> {user.rating !== null ? user.rating : "No rating yet"}
                                         </p>
                                     </>
                                 )}
