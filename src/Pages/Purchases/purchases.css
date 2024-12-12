@@ -1,40 +1,37 @@
-.purchase{
-    border: none;
-    border-radius: 5px;
-    list-style: none;
-    background-color: hsl(35, 73%, 88%);
-    margin-top: 20px;
-    margin-right:20px;    
-    overflow: hidden;
-    font-size: 20px;
+.purchase {
+  border: none;
+  border-radius: 5px;
+  list-style: none;
+  background-color: hsl(35, 73%, 88%);
+  margin-top: 20px;
+  margin-right: 20px;
+  overflow: hidden;
+  font-size: 20px;
 }
 
-.purchase-info{
-    padding: 20px;
-    display: flow-root;
-    font-family: Arial, sans-serif;
-
+.purchase-info {
+  padding: 20px;
+  display: flow-root;
+  font-family: Arial, sans-serif;
 }
 
-.rate-seller-button{
-    background-color: rgb(138, 202, 220);
-    border: none;
-    border-radius: 5px;
-    height: 35px;
-    text-align: center;
+.rate-seller-button {
+  background-color: rgb(138, 202, 220);
+  border: none;
+  border-radius: 5px;
+  height: 35px;
+  text-align: center;
 }
 
-.purchase-image{
-    float: left;
-    border-radius: 10px;
-    margin: 20px;
-    max-height: 100%;
-    object-fit: cover;
-    
+.purchase-image {
+  float: left;
+  border-radius: 10px;
+  margin: 20px;
+  max-height: 100%;
+  object-fit: cover;
 }
 
-.title{
-    margin-left: 15px;
-    font-family: Rubik, sans-serif;
-
+.title {
+  margin-left: 15px;
+  font-family: Rubik, sans-serif;
 }
