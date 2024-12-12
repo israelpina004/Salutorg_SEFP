@@ -164,6 +164,39 @@ const updateBalance = (req, res) => {
 };
 
 
+const getComments = (req, res) => {
+  const sql = "SELECT * FROM comments ORDER BY createdAt DESC";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching comments:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json(results);
+  });
+
+};
+
+const addComment = async (req, res) => {
+  const { userId, username, comment } = req.body;
+  // Validate the input
+  if (!username || !comment) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+
+  try {
+    // Insert the comment into the database
+    const query = "INSERT INTO comments (userId, username, comment) VALUES (?, ?, ?)";
+    const values = [userId, username, comment];
+    db.query(query, values);
+
+    // Send a success response
+    res.status(200).json({ success: true, message: "Comment added successfully!" });
+  } catch (error) {
+    console.error("Error adding comment:", error.message);
+    res.status(500).json({ error: "An error occurred while adding the comment." });
+  }
+};
+
 module.exports = 
 { registerUser, 
   loginUser, 
@@ -172,4 +205,6 @@ module.exports =
   updateBalance,
   logoutUser,
   getLoggedInUser,
+  getComments,
+  addComment,
  };

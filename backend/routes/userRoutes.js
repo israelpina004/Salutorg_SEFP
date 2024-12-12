@@ -9,6 +9,8 @@ const {
   getUsers,
   logoutUser,
   getLoggedInUser,
+  getComments,
+  addComment,
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -21,6 +23,8 @@ router.post("/logout", logoutUser);
 router.get("/balance/:userId", getBalance);
 router.post("/update-balance", updateBalance);
 router.get("/", getUsers);
+router.get("/comments", getComments);
+router.post("/comments",addComment);
 
 module.exports = router;
 
