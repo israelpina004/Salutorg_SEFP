@@ -84,3 +84,10 @@
   font-weight: bold;
   margin-top: auto;
 }
+
+.placeholder-image {
+  color: #838282;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}

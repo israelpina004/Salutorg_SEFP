@@ -208,7 +208,36 @@ const placeBid = (req, res) => {
   });
 };
 
+const getUserSellItems = (req, res) => {
+  const { userId } = req.body; // Assume userId is sent in the request body.
 
+  if (!userId) {
+    return res.status(400).json({ error: "User ID is required." });
+  }
 
+  const query = `
+    SELECT 
+      i.item_ID AS id, 
+      i.name, 
+      i.description, 
+      i.item_condition, 
+      i.category, 
+      i.image, 
+      s.starting_price, 
+      s.deadline 
+    FROM item i
+    INNER JOIN sell s ON i.item_ID = s.item_ID
+    WHERE s.seller_id = ?
+  `;
 
-module.exports = { insertSellItem, getSellItems, placeBid };
+  db.query(query, [userId], (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ error: "Failed to fetch items." });
+    }
+
+    res.status(200).json({ items: results });
+  });
+};
+
+module.exports = { insertSellItem, getSellItems, placeBid, getUserSellItems };

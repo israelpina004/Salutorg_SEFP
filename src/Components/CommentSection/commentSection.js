@@ -70,6 +70,7 @@ const CommentSection = () => {
   };
   
   fetchComments();
+  
   // Handle comment submission
   const handleCommentSubmit = async (e) => {
     e.preventDefault();

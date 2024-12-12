@@ -1,7 +1,35 @@
 import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import Logo2 from "../../Assets/Images/Logo-5.svg"
 
 const Profile = () => {
+    const [username, setUsername] = useState(""); // New state to store username
+    const [registrationDate, setRegistrationDate] = useState("");
+      // Fetch logged-in user and their balance
+      useEffect(() => {
+        fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/getlogin`, {
+          method: "POST",
+        })
+          .then((res) => {
+            if (!res.ok) {
+              return res.json().then((error) => {
+                throw new Error(`Failed to fetch logged-in user: ${error.message}`);
+              });
+            }
+            return res.json();
+          })
+          .then((data) => {
+            if (data && data.loggedInUser) {
+              setUsername(data.loggedInUser.username); // Set the username
+              setRegistrationDate(data.loggedInUser.registration_date.split("T")[0]);
+              
+            } else {
+              console.error("No user is currently logged in.");
+            }
+          })
+          .catch((err) => console.error("Error fetching logged-in user:", err));
+      }, []);
+
     return (
         <>
             <div id="ProfilePage" className="container-fluid bg-white min-vh-100">
@@ -46,10 +74,10 @@ const Profile = () => {
                             <div className="card shadow-sm p-4">
                                 <h5>About You</h5>
                                 <p>
-                                    <strong>Name:</strong> User Name
+                                    <strong>Name:</strong> {username}
                                 </p>
                                 <p>
-                                    <strong>Member Since:</strong> Date Here 
+                                    <strong>Member Since:</strong> {registrationDate}
                                 </p>
                                 <button className="btn btn-outline-dark">
                                     Edit public profile

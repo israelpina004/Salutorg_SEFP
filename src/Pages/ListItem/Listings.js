@@ -80,76 +80,84 @@ function RentalPage(){
 //_________________________________________________________________________________________________________________________________________________
 
 
-function SellPage(){
-
-    const [items, setItems]=useState([]);
+function SellPage() {
+    const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(true);
-
-
-
-    useEffect(()=>{
-        fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/readSellItems`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+    const [userId, setUserId] = useState(null); // To store logged-in user's ID
+  
+    // Fetch logged-in user ID
+    useEffect(() => {
+      fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/getlogin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.loggedInUser) {
+            setUserId(data.loggedInUser.user_ID); // Set logged-in user's ID
+          } else {
+            console.error("No user is currently logged in.");
+          }
         })
-        .then(response =>response.json())
-        .then(data=>{
+        .catch((err) => console.error("Error fetching logged-in user:", err));
+    }, []);
+  
+    // Fetch items for the logged-in user
+    useEffect(() => {
+      if (userId) {
+        fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/getusersellitems`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
             console.log("data received:", data);
-            console.log("Data:", data);
-            
-            setItems(data.result)
-            console.log("items:", data.result);
-            if(data.result.length!==0){
-                setLoading(false);
-            }
-        })
-        .catch((error)=>{
-            console.error("My Error: ", error);
-        });
-
-    }, []) 
-    if(loading){
-        return (
-        <>
-            <div>
-            <p className="noitems">No items to list yet</p>
-            </div>
-        </>
-        )
-        
+            setItems(data.items || []);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching sell items:", error);
+            setLoading(false);
+          });
+      }
+    }, [userId]);
+  
+    if (loading) {
+      return <p className="noitems">Loading items...</p>;
     }
-
-const itemsList = items.map(item => (
-    <div className='purchase' key={item.id}>  {/* Added the key prop here */}
+  
+    if (items.length === 0) {
+      return <p className="noitems">No items to list yet.</p>;
+    }
+  
+    const itemsList = items.map((item) => (
+      <div className="purchase" key={item.id}>
         <img className="purchase-image" src={`data:image/jpeg;base64,${item.image}`} alt="Item" />
-        <div className='purchase-info'>
-            <b>Listing Title:</b> {item.name} <br />
-            <b>Condition:</b> {item.condition} <br />
-            <b>Starting Price:</b> ${item.starting_price} <br />
-            <b>Category:</b> {item.category} <br />
-            <b>Bidding End Date:</b> {item.deadline} <br />
-            <b>Description:</b> {item.description} <br />
+        <div className="purchase-info">
+          <b>Listing Title:</b> {item.name} <br />
+          <b>Condition:</b> {item.condition} <br />
+          <b>Starting Price:</b> ${item.starting_price} <br />
+          <b>Category:</b> {item.category} <br />
+          <b>Bidding End Date:</b> {item.deadline} <br />
+          <b>Description:</b> {item.description} <br />
         </div>
         <div className="edit_top">
-            <button className='edit-listing-button'>Edit Listing</button>            
-            <button className='top-bid-button'>Top Bid</button>            
+          <button className="edit-listing-button">Edit Listing</button>
+          <button className="top-bid-button">Top Bid</button>
         </div>
-    </div>
-));
-
-
-
-    return(
-        <>
+      </div>
+    ));
+  
+    return (
+      <>
         <p>Sell Page</p>
         <div>
-            <ul>{itemsList}</ul>
+          <ul>{itemsList}</ul>
         </div>
-        </>
-    )
-}
+      </>
+    );
+  }
 
 
 
