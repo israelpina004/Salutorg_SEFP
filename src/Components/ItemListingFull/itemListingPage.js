@@ -55,6 +55,7 @@
 import { useParams } from "react-router-dom";
 import ItemListingFull from "./itemListingFull";
 import { useState, useEffect } from "react";
+import CommentSection from "../../Components/CommentSection/commentSection.js";
 
 function ItemListingPage() {
   const [items, setItems] = useState([]);
@@ -142,17 +143,21 @@ function ItemListingPage() {
   
 
   return (
-    <div>
-      <ItemListingFull
-        image={item.image}
-        name={item.name}
-        currentPrice={item.price}
-        topBid={item.topBid}
-        deadline={item.deadline}
-        itemId={item.id} // Pass itemId for bidding
-        placeBid={placeBid} // Pass the placeBid function
-      />
-    </div>
+    <>
+      <div>
+        <ItemListingFull
+          image={item.image}
+          name={item.name}
+          currentPrice={item.price}
+          topBid={item.topBid}
+          deadline={item.deadline}
+          itemId={item.id} // Pass itemId for bidding
+          placeBid={placeBid} // Pass the placeBid function
+        />
+        <CommentSection />
+      </div>
+    </>
+    
   );
 }
 

@@ -97,7 +97,7 @@ const Balance = () => {
 
       {/* Link to the Profile page */}
       <div className="auth-form-container">
-        <Link to="/profile">Back to Account Settings</Link>
+        <Link to="/profile">Account Settings</Link>
       </div>
 
     </>
