@@ -16,7 +16,7 @@ const Profile = () => {
                 <div className="tabs-container w-100 p-3 border-bottom border-gray-300">
                     <ul className="nav nav-tabs justify-content-center">
                         <li className="nav-item">
-                            <Link className="nav-link active" to="/account">
+                            <Link className="nav-link active" to="/profile">
                                 Account
                             </Link>
                         </li>

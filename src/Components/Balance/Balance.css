@@ -1,0 +1,45 @@
+.auth-title {
+    width: 100%;
+    padding: 16px;
+    text-align: center;
+    font-size: 24px;
+}
+
+.auth-form-container {
+    width: 100%;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.auth-submit-button {
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .auth-submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Redirect link */
+  .auth-redirect {
+    width: 100%;
+    padding: 16px;
+    text-align: center;
+    font-size: 14px;
+  }
+  
+  .auth-redirect a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .auth-redirect a:hover {
+    text-decoration: underline;
+  }
+  
