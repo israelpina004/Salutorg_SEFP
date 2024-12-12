@@ -163,6 +163,34 @@ const updateBalance = (req, res) => {
   });
 };
 
+// Updates rating
+const updateRating = (req, res) => {
+  const { sellerId, rating } = req.body; 
+  
+  const findSellerQuery = "SELECT user_ID FROM sell WHERE seller_ID = ?"; 
+  db.query(findSellerQuery, [sellerId], (err, results) => { 
+    if (err) {
+      console.error("Error finding seller:", err); 
+      return res.status(500).json({ error: "Database error during seller lookup." });
+    } 
+    
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Seller not found." });
+    } 
+    
+    const userId = results[0].user_ID; 
+    
+    const updateRatingQuery = "UPDATE user SET rating = ? WHERE user_ID = ?"; 
+    db.query(updateRatingQuery, [rating, userId], (updateErr, updateResult) => {
+      if (updateErr) {
+        console.error("Error updating seller rating:", updateErr);
+        return res.status(500).json({ error: "Database error during rating update." }); 
+      } 
+      res.json({ success: true, message: "Seller rating updated successfully!" }); 
+    }); 
+  }); 
+};
+
 
 module.exports = 
 { registerUser, 
@@ -172,4 +200,5 @@ module.exports =
   updateBalance,
   logoutUser,
   getLoggedInUser,
+ updateRating,
  };
