@@ -13,6 +13,7 @@ const Purchases=()=> {
         const newPurchase={
             image: 1,
             id: 1,
+            sellerId: 1,
             name: "Item Name",
             price: 70.99,
             date: Date(),
@@ -38,6 +39,28 @@ const Purchases=()=> {
             </div>            
         </div>)
 
+    // API for submitting rating
+    const submitRating = async (sellerId, rating) => { 
+        try { 
+            const response = await fetch("/api/updateSellerRating", { 
+                method: "POST", 
+                headers: { "Content-Type": "application/json" }, 
+                body: JSON.stringify({ sellerId, rating }), 
+            }); 
+            const data = await response.json(); 
+            
+            if (data.success) {
+                alert(data.message);
+            } 
+            else {
+                console.error(data.error); 
+            } 
+        } 
+        catch (error) {
+            console.error("Error submitting rating:", error); 
+        }
+    };
+
     return(
         <>
         <Header>Header</Header>
@@ -49,10 +72,14 @@ const Purchases=()=> {
             <ul>{itemsList}</ul>
         </div>
         <RatingPopup
-                show={showPopup}
-                onClose={closePopup}
-                item={currentItem}
-            />
+            show={showPopup}
+            onClose={closePopup}
+            onSubmitRating={(rating) =>
+                submitRating(currentItem?.sellerId, rating)
+            }
+            item={currentItem}
+        />
+            
         </>
     )
 }
