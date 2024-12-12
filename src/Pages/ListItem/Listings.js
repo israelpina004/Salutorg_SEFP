@@ -142,9 +142,9 @@ function SellPage() {
           <b>Bidding End Date:</b> {item.deadline} <br />
           <b>Description:</b> {item.description} <br />
         </div>
-        <div className="edit_top">
-          <button className="edit-listing-button">Edit Listing</button>
-          <button className="top-bid-button">Top Bid</button>
+        <div className="edit_top">           
+            <button className='option-button'>Accept Bid: (TOP BID HERE)</button>
+            <span style={{padding: 10}}>Test</span>
         </div>
       </div>
     ));

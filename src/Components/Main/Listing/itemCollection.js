@@ -6,19 +6,21 @@ const ItemCard = ({ id, title, price, imageUrl }) => {
   const isPlaceholder = !id;
 
   return (
-    <div className={`item-card ${isPlaceholder ? "placeholder-card" : ""}`}>
-      <div className="item-image-container">
-        {imageUrl ? (
-          <img src={`data:image/jpeg;base64,${imageUrl}`} alt={title} className="item-image" />
-        ) : (
-          <div className="placeholder-image">No Image Available</div>
-        )}
+    <Link to={`/item/${id}`}  className="link-item-card">
+        <div className={`item-card ${isPlaceholder ? "placeholder-card" : ""}`}>
+          <div className="item-image-container">
+            {imageUrl ? (
+              <img src={`data:image/jpeg;base64,${imageUrl}`} alt={title} className="item-image" />
+            ) : (
+              <div className="placeholder-image">No Image Available</div>
+            )}
+          </div>
+          <div className="item-details">
+            <p className="item-title">{title || "No Items Available"}</p>
+            {price && <p className="item-price">${price}</p>}
+          </div>
       </div>
-      <div className="item-details">
-        <p className="item-title">{title || "No Items Available"}</p>
-        {price && <p className="item-price">${price}</p>}
-      </div>
-    </div>
+    </Link>
   );
 };
 

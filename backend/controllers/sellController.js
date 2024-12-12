@@ -91,7 +91,8 @@ const getSellItems = (req, res) => {
       item.item_condition, 
       item.category, 
       item.image, 
-      sell.starting_price AS price, 
+      sell.starting_price AS price,
+      sell.current_bid AS topBid, 
       sell.deadline
     FROM 
       item

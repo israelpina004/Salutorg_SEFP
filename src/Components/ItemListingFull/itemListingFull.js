@@ -51,24 +51,35 @@
 import { useState } from "react";
 import "./itemListingFull.css";
 import PropTypes from "prop-types";
-import Header from "../../Components/Header/header"
+import Header from "../../Components/Header/header";
 
-function ItemListingFull({ image, name, currentPrice, description, topBid, deadline, itemId, placeBid }) {
-  console.log("ItemListingFull props:", { image, name, currentPrice, description, topBid, deadline });
+function ItemListingFull({ image, name, currentPrice, description, topBid: initialTopBid, deadline, itemId, placeBid }) {
+  console.log("ItemListingFull props:", { image, name, currentPrice, description, initialTopBid, deadline });
 
   const [bidAmount, setBidAmount] = useState("");
+  const [topBid, setTopBid] = useState(initialTopBid); // State for the top bid
 
-  const handleBidSubmit = (e) => {
+  const handleBidSubmit = async (e) => {
     e.preventDefault();
     const bidValue = parseFloat(bidAmount); // Convert bidAmount to a float
     if (isNaN(bidValue) || bidValue <= 0) {
       alert("Please enter a valid bid amount.");
       return;
     }
-    placeBid(bidValue, itemId); // Ensure bidValue is a number
+
+    try {
+      const newTopBid = await placeBid(bidValue, itemId); // Get the updated top bid from the function
+      if (newTopBid !== null && newTopBid > topBid) {
+        setTopBid(newTopBid); // Update the state with the new top bid
+        alert("Bid placed successfully!");
+      }
+    } catch (error) {
+      console.error("Error placing bid:", error);
+      alert("Failed to place bid. Please try again.");
+    }
+
+    setBidAmount(""); // Clear the input field
   };
-  
-  
 
   return (
     <>
@@ -84,7 +95,7 @@ function ItemListingFull({ image, name, currentPrice, description, topBid, deadl
         <div className="item-details-full">
           <h2>{name || "Unnamed Item"}</h2>
           <p className="current-price">
-            Current Price: ${Number(currentPrice || 0).toFixed(2)}
+            Buy Now: ${Number(currentPrice || 0).toFixed(2)}
           </p>
           <p className="description">{description || "No description available."}</p>
         </div>
@@ -94,11 +105,11 @@ function ItemListingFull({ image, name, currentPrice, description, topBid, deadl
           </button>
           <button className="deadline">Deadline: {deadline || "N/A"}</button>
           <form onSubmit={handleBidSubmit}>
-            <input 
-              type="number" 
-              value={bidAmount} 
-              onChange={(e) => setBidAmount(e.target.value)} 
-              placeholder="Enter your bid" 
+            <input
+              type="number"
+              value={bidAmount}
+              onChange={(e) => setBidAmount(e.target.value)}
+              placeholder="Enter your bid"
             />
             <button type="submit">Place Bid</button>
           </form>
@@ -126,5 +137,6 @@ ItemListingFull.defaultProps = {
 };
 
 export default ItemListingFull;
+
 
 

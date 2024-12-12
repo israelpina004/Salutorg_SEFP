@@ -55,36 +55,38 @@ const CommentSection = () => {
     fetchComments();
   }, [API_URL]);*/
 
-  const fetchComments = async () => {
-    try {
-      const response = await fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/getcomment`);
-      if (response.ok) {
-        const data = await response.json();
-        setComments(data); // Update the comments state with the latest data
-      } else {
-        console.warn("Failed to fetch comments.");
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await fetch(`${API_URL}/getcomment`);
+        if (response.ok) {
+          const data = await response.json();
+          setComments(data); // Set fetched comments
+        } else {
+          console.warn("Failed to fetch comments.");
+        }
+      } catch (error) {
+        console.error("Error fetching comments:", error.message);
       }
-    } catch (error) {
-      console.error("Error fetching comments:", error.message);
-    }
-  };
+    };
   
-  fetchComments();
-  
+    fetchComments();
+  }, [API_URL]);
+
   // Handle comment submission
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!comment.trim()) {
       setMessage("Comment cannot be empty.");
       return;
     }
-
+  
     if (comment.trim().length > 500) {
       setMessage("Comment cannot exceed 500 characters.");
       return;
     }
-
+  
     setLoading(true); // Start loading
     try {
       const response = await fetch(`${API_URL}/addcomment`, {
@@ -96,17 +98,12 @@ const CommentSection = () => {
           comment,
         }),
       });
-
+  
       if (response.ok) {
         setMessage("Comment added successfully!");
-        setComment(""); // Clear comment input
-        fetchComments();
-
-        // Reload comments
-        
-        const updatedComments = await response.json();
-        console.log(updatedComments);
-        setComments([...comments, updatedComments]);
+        const newComment = { username, comment }; // Create the new comment object
+        setComments((prevComments) => [newComment, ...prevComments]); // Append the new comment
+        setComment(""); // Clear the comment input
       } else {
         const errorData = await response.json();
         setMessage(`Error: ${errorData.error}`);
@@ -118,9 +115,6 @@ const CommentSection = () => {
       setLoading(false); // Stop loading
     }
   };
-
-  
-  
 
   return (
     <div className="comment-section">

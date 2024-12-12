@@ -1,57 +1,3 @@
-// import { useParams } from "react-router-dom";
-// import ItemListingFull from "./itemListingFull";
-// import {useState, useEffect} from 'react';
-
-
-
-//   function ItemListingPage() {
-//     const [items, setItems]=useState([]);
-//     const { id } = useParams(); // Get the dynamic ID from the URL
-//     const [loading, setLoading] = useState(true);
-
-//     useEffect(() => {
-//       console.log("Fetching items...");
-//       fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/readSellItems`, {
-//         method: 'GET',
-//         headers: { 'Content-Type': 'application/json' },
-//       })
-//         .then((response) => response.json())
-//         .then((data) => {
-//           console.log("Data received:", data);
-//           setItems(data.result || []);
-//           setLoading(false);
-//         })
-//         .catch((error) => {
-//           console.error("Fatoumatas Error: Error fetching items", error);
-//           setLoading(false);
-//         });
-//     }, []);
-    
-//     if (loading) {
-//       return <p>Loading items...</p>;
-//     }
-
-//     const item = items.find((item) => item.id === parseInt(id)); // Find the item by ID
-    
-//     if (!item) {
-//       return <p>Item not found.</p>; // Display error if item is not found
-//     }
-    
-//     return (
-//       <div>
-//         <h1>{item.name}</h1>
-//         <ItemListingFull
-//           image={item.image}
-//           name={item.name}
-//           currentPrice={item.price}
-//           deadline={item.deadline}
-//         />
-//       </div>
-//     );
-// }
-
-// export default ItemListingPage;
-
 import { useParams } from "react-router-dom";
 import ItemListingFull from "./itemListingFull";
 import { useState, useEffect } from "react";
@@ -125,18 +71,23 @@ function ItemListingPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(bidData), // Ensure bidAmount and itemId are correct
+        body: JSON.stringify(bidData),
       });
   
       const bidResult = await bidResponse.json();
+  
       if (bidResult.success) {
-        alert("Bid placed successfully!");
+  
+        // Update the topBid dynamically
+        return bidAmount; // Return the new top bid amount
       } else {
         alert(bidResult.message); // Show the specific error message returned from the backend
+        return null; // Return null to indicate no update
       }
     } catch (error) {
       console.error("Error placing bid:", error);
       alert("An error occurred while placing the bid. Please try again.");
+      return null; // Return null to indicate no update
     }
   };
   
