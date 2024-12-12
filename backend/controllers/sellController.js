@@ -93,7 +93,8 @@ const getSellItems = (req, res) => {
       item.image, 
       sell.starting_price AS price,
       sell.current_bid AS topBid, 
-      sell.deadline
+      sell.deadline,
+      sell.seller_ID -- Include seller ID for filtering
     FROM 
       item
     INNER JOIN 
@@ -110,7 +111,7 @@ const getSellItems = (req, res) => {
 
     const itemsWithBase64 = results.map((item) => {
       if (item.image) {
-        item.image = item.image.toString("base64"); // Convert image buffer to base64
+        item.image = item.image.toString("base64");
       }
       return item;
     });
@@ -121,6 +122,7 @@ const getSellItems = (req, res) => {
     });
   });
 };
+
 
 
 const placeBid = (req, res) => {
