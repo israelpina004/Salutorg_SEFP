@@ -10,7 +10,8 @@ const {
   logoutUser,
   getLoggedInUser,
   addComment, 
-  getComments
+  getComments,
+  acceptBid
 } = require("../controllers/userController");
 
 const router = express.Router();
@@ -25,5 +26,6 @@ router.post("/update-balance", updateBalance);
 router.post("/addcomment", addComment);
 router.get("/getcomment", getComments);
 router.get("/", getUsers);
+router.post("/acceptBid", acceptBid);
 
 module.exports = router;

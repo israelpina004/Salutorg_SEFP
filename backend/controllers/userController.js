@@ -189,6 +189,114 @@ const getComments = (req, res) => {
   });
 };
 
+const acceptBid = async (req, res) => {
+  const item_ID = req.body.id;  // Extract item_ID from the request body
+  console.log("Item ID:", item_ID, typeof(item_ID));
+
+  try {
+      // Ensure the item_ID is a valid number
+      if (!item_ID) {
+          throw new Error("Invalid item ID. ID is empty.");
+      }
+
+      if (typeof item_ID !== 'number' || isNaN(item_ID)) {
+          throw new Error("Invalid item ID. ID is not a number.");
+      }  
+
+      // The rest of the code as before...
+      const query = `
+          SELECT 
+              s.seller_ID, 
+              s.current_bid, 
+              s.item_ID, 
+              b.user_ID AS highest_bidder
+          FROM sell s
+          LEFT JOIN bid b ON s.sell_ID = b.sell_ID
+          WHERE s.item_ID = ? 
+          ORDER BY b.bid_amount DESC
+          LIMIT 1;
+      `;
+      console.log("Query to execute:", query);
+      console.log("Parameters:", [item_ID]);
+
+      const [result] = await db.promise().query(query, [item_ID]);
+
+      console.log("Query result:", result);
+
+      const itemDetails = result[0];
+
+      if (!itemDetails) {
+          throw new Error("No bid found for this item.");
+      }
+
+      console.log("Item details retrieved:", itemDetails);
+
+      const { seller_ID, current_bid, item_ID: itemID, highest_bidder } = itemDetails;
+
+      // Validate necessary values
+      if (current_bid === 0.00) {
+          throw new Error("No bids on this item.");
+      }
+      if (!highest_bidder || !seller_ID) {
+          throw new Error("Missing bidder or seller data.");
+      }
+
+      console.log("Inserting transaction with values:", [seller_ID, highest_bidder, itemID]);
+
+      // Start a transaction
+      await db.promise().beginTransaction();
+
+      // Insert transaction without amount column
+      const insertTransactionQuery = `
+          INSERT INTO transactions (vendor_ID, customer_ID, item_ID)
+          VALUES (?, ?, ?);
+      `;
+      const [transactionResult] = await db.promise().query(insertTransactionQuery, [seller_ID, highest_bidder, itemID]);
+
+      if (transactionResult.affectedRows === 0) {
+          throw new Error("Failed to insert transaction.");
+      }
+
+      console.log("Transaction inserted successfully:", transactionResult);
+
+      // Transfer funds to seller and bidder
+      const transferFundsQuery = `
+          UPDATE \`user\` 
+          SET balance = balance + ? 
+          WHERE user_ID = ?;
+      `;
+
+      const [sellerFundsResult] = await db.promise().query(transferFundsQuery, [current_bid, seller_ID]);
+      const [bidderFundsResult] = await db.promise().query(transferFundsQuery, [-current_bid, highest_bidder]);
+
+      if (sellerFundsResult.affectedRows === 0 || bidderFundsResult.affectedRows === 0) {
+          throw new Error("Failed to update balances.");
+      }
+
+      // Delete the item from the inventory after successful bid acceptance
+      const deleteItemQuery = `DELETE FROM item WHERE item_ID = ?`;
+      const [deleteResult] = await db.promise().query(deleteItemQuery, [itemID]);
+
+      if (deleteResult.affectedRows === 0) {
+          throw new Error("Failed to delete the item.");
+      }
+
+      // Commit the transaction
+      await db.promise().commit();
+
+      console.log(`Bid accepted! Item ID: ${itemID}, Seller ID: ${seller_ID}, Customer ID: ${highest_bidder}, Amount: ${current_bid}`);
+      return res.json({ success: true, message: `Bid accepted for item ${itemID}. Transaction completed.` });
+
+  } catch (error) {
+      console.error("Error accepting bid:", error.message);
+      await db.promise().rollback(); // Rollback if anything fails
+      return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+
+
+
 module.exports = 
 { registerUser, 
   loginUser, 
@@ -199,4 +307,5 @@ module.exports =
   getLoggedInUser,
   addComment, 
   getComments,
+  acceptBid
  };

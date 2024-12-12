@@ -224,7 +224,8 @@ const getUserSellItems = (req, res) => {
       i.item_condition, 
       i.category, 
       i.image, 
-      s.starting_price, 
+      s.starting_price,
+      s.current_bid, 
       s.deadline 
     FROM item i
     INNER JOIN sell s ON i.item_ID = s.item_ID

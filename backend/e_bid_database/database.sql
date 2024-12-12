@@ -29,6 +29,8 @@ CREATE TABLE `user` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 ALTER TABLE user
 ADD COLUMN is_loggedin BOOLEAN DEFAULT FALSE;
+ALTER TABLE user
+ADD COLUMN registration_date DATETIME DEFAULT current_timestamp;
 -- Code for "superuser" table. Holds superuser information.
 DROP TABLE IF EXISTS `superuser`;
 CREATE TABLE `superuser` (
@@ -80,14 +82,18 @@ ADD COLUMN `seller_ID` INT NOT NULL,
   ADD CONSTRAINT `fk_seller` FOREIGN KEY (`seller_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE;
 ALTER TABLE `sell`
 ADD COLUMN `current_bid` DECIMAL(10, 2) DEFAULT 0.00;
--- Code for "purchases" table. Records who bought what.
+-- Code for "transactions" table. Records who bought what.
 DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE `transactions` (
   `transaction_ID` INT NOT NULL AUTO_INCREMENT,
   `customer_ID` INT NOT NULL,
+  `vendor_ID` INT NOT NULL,
+  `item_ID` INT NOT NULL,
   PRIMARY KEY (`transaction_ID`),
-  FOREIGN KEY (`customer_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE
+  FOREIGN KEY (`customer_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE,
+  FOREIGN KEY (`vendor_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE
 );
+
 -- Code for "bid" table. Stores bids.
 DROP TABLE IF EXISTS `bid`;
 CREATE TABLE `bid` (
@@ -103,6 +109,17 @@ CREATE TABLE `bid` (
   FOREIGN KEY (`user_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE,
   FOREIGN KEY (`sell_ID`) REFERENCES `sell`(`sell_ID`) ON DELETE CASCADE
 );
+
+-- Code for "comments" table. Stores comments from each item's comment's section.
+DROP TABLE IF EXISTS comments;
+CREATE TABLE comments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT NULL, -- Null if the user is a visitor
+  username VARCHAR(255) NOT NULL, -- Stores 'Visitor' for unsigned users
+  comment TEXT NOT NULL,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Procedures --
 -- Makes a user a VIP if the necessary conditions are true.
 DROP PROCEDURE IF EXISTS set_vip_status;
@@ -138,7 +155,8 @@ WHERE user_ID = p_user_ID;
 END IF;
 END // DELIMITER;
 -- Handles suspension of users.
-DELIMITER // CREATE PROCEDURE suspend_user_if_criteria_met(IN p_user_ID INT) BEGIN
+DELIMITER // 
+CREATE PROCEDURE suspend_user_if_criteria_met(IN p_user_ID INT) BEGIN
 DECLARE item_count INT DEFAULT 0;
 DECLARE user_rating FLOAT;
 DECLARE suspension_count INT;
@@ -177,9 +195,7 @@ DELETE FROM `user`
 WHERE user_ID = p_user_ID;
 END IF;
 END IF;
-END // DELIMITER;
-ALTER TABLE user
-ADD COLUMN registration_date DATETIME DEFAULT current_timestamp;
+END //
 -- Code for "bid" table. Stores top bids on a certain item. ( NEEDS CHANGES )
 -- DROP TABLE IF EXISTS `bid`;
 -- CREATE TABLE `bid` (
@@ -234,17 +250,17 @@ ADD COLUMN registration_date DATETIME DEFAULT current_timestamp;
 --   CONSTRAINT `pay_auction_ID` FOREIGN KEY (`auction_ID`) REFERENCES `auction` (`auction_ID`),
 --   CONSTRAINT `pay_user_ID` FOREIGN KEY (`user_ID`) REFERENCES `user` (`user_ID`)
 -- );
--- Code for "comments" table. Stores comments from each item's comment's section.
--- CREATE TABLE comments (
---   id INT AUTO_INCREMENT PRIMARY KEY,
---   userId INT NULL, -- Null if the user is a visitor
---   username VARCHAR(255) NOT NULL, -- Stores 'Visitor' for unsigned users
---   comment TEXT NOT NULL,
---   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
--- );
 -- SELECT * FROM `user`;
 -- SELECT * FROM `item`;
 -- SELECT * from `sell`;
 -- SELECT * FROM `bid`;
+-- INSERT INTO transactions (vendor_ID, customer_ID, item_ID)
+-- VALUES (1, 1, 1);
+-- SELECT * FROM transactions;
+-- DELETE FROM transactions;
 -- SET SQL_SAFE_UPDATES = 0;
 -- DROP DATABASE `ebid_proj`;
+
+
+
+

@@ -273,7 +273,7 @@ const SellForm = () => {
           <br />
 
           {/* Starting Price */}
-          <label htmlFor="itemStartPrice" className="labels">Item Starting Bid Price:</label>
+          <label htmlFor="itemStartPrice" className="labels">Item "Buy Now" Price:</label>
           <input
             id="itemStartPrice"
             type="number"
