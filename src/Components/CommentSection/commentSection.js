@@ -118,7 +118,7 @@ const CommentSection = () => {
   }, [API_URL]);
 
   // Fetch all comments
-  useEffect(() => {
+  /*useEffect(() => {
     const fetchComments = async () => {
       try {
         const response = await fetch(`${API_URL}/comments`);
@@ -134,8 +134,23 @@ const CommentSection = () => {
     };
 
     fetchComments();
-  }, [API_URL]);
+  }, [API_URL]);*/
 
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/comments`);
+      if (response.ok) {
+        const data = await response.json();
+        setComments(data); // Update the comments state with the latest data
+      } else {
+        console.warn("Failed to fetch comments.");
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error.message);
+    }
+  };
+  
+  fetchComments();
   // Handle comment submission
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
@@ -165,6 +180,7 @@ const CommentSection = () => {
       if (response.ok) {
         setMessage("Comment added successfully!");
         setComment(""); // Clear comment input
+        fetchComments();
 
         // Reload comments
         
@@ -182,6 +198,9 @@ const CommentSection = () => {
       setLoading(false); // Stop loading
     }
   };
+
+  
+  
 
   return (
     <div className="comment-section">
