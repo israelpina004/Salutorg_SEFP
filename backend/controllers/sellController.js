@@ -120,4 +120,95 @@ const getSellItems = (req, res) => {
 };
 
 
-module.exports = { insertSellItem, getSellItems };
+const placeBid = (req, res) => {
+  const { itemId, userId, bidAmount } = req.body;
+
+  // Convert bidAmount to a float to ensure correct comparison
+  const parsedBidAmount = parseFloat(bidAmount);
+
+  if (isNaN(parsedBidAmount) || parsedBidAmount <= 0) {
+    return res.status(400).json({ success: false, message: "Invalid bid amount." });
+  }
+
+  // Now use parsedBidAmount in your queries and checks
+  // First, check if the user's balance is sufficient
+  const checkUserSql = "SELECT balance FROM user WHERE user_ID = ?";
+  db.query(checkUserSql, [userId], (err, userResult) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ success: false, message: "Database error." });
+    }
+
+    if (userResult.length === 0) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+
+    const userBalance = userResult[0].balance;
+
+    if (userBalance < parsedBidAmount) {
+      return res.status(400).json({ success: false, message: "Insufficient balance." });
+    }
+
+    // Fetch the current highest bid for the item
+    const getCurrentBidSql = "SELECT current_bid FROM sell WHERE item_ID = ?";
+    db.query(getCurrentBidSql, [itemId], (err, currentBidResult) => {
+      if (err) {
+        console.error("Error fetching current bid:", err);
+        return res.status(500).json({ success: false, message: "Database error." });
+      }
+
+      if (currentBidResult.length === 0) {
+        return res.status(404).json({ success: false, message: "Item not found." });
+      }
+
+      const currentBid = currentBidResult[0].current_bid;
+
+      if (parsedBidAmount <= currentBid) {
+        return res.status(400).json({ success: false, message: "Bid must be higher than the current bid." });
+      }
+
+      // Proceed with inserting the bid and updating the current bid
+      const getSellIdSql = "SELECT sell_ID FROM sell WHERE item_ID = ?";
+      db.query(getSellIdSql, [itemId], (err, sellResult) => {
+        if (err) {
+          console.error("Error fetching sell_ID:", err);
+          return res.status(500).json({ success: false, message: "Database error." });
+        }
+
+        if (sellResult.length === 0) {
+          return res.status(404).json({ success: false, message: "Sell record not found for this item." });
+        }
+
+        const sellId = sellResult[0].sell_ID;
+
+        const insertBidSql = `
+          INSERT INTO bid (user_ID, sell_ID, bid_amount) 
+          VALUES (?, ?, ?)
+        `;
+
+        db.query(insertBidSql, [userId, sellId, parsedBidAmount], (err) => {
+          if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ success: false, message: "Failed to place bid." });
+          }
+
+          // Update the current bid in the sell table
+          const updateCurrentBidSql = "UPDATE sell SET current_bid = ? WHERE sell_ID = ?";
+          db.query(updateCurrentBidSql, [parsedBidAmount, sellId], (err) => {
+            if (err) {
+              console.error("Error updating current bid:", err);
+              return res.status(500).json({ success: false, message: "Failed to update current bid." });
+            }
+
+            res.status(200).json({ success: true, message: "Bid placed successfully." });
+          });
+        });
+      });
+    });
+  });
+};
+
+
+
+
+module.exports = { insertSellItem, getSellItems, placeBid };

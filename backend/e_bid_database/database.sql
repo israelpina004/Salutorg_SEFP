@@ -11,7 +11,7 @@ CREATE TABLE `viewer` (
   PRIMARY KEY (`viewer_ID`)
 );
 
--- Code for "user" table. Also contains procedures for handling suspensions and VIP status.
+-- Code for "user" table.
 DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE `user` (
@@ -30,46 +30,6 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ALTER TABLE user
 ADD COLUMN is_loggedin BOOLEAN DEFAULT FALSE;
--- The procedure checks if the user is a VIP first. If they are, the user is not suspended but they are no longer a
--- VIP. Also, their suspension count goes up by 1. If the user is not a VIP, they're suspended and their suspension
--- count goes up by 1.
-
-DELIMITER //
-
-CREATE PROCEDURE suspend_user(IN p_user_ID INT)
-BEGIN
-  DECLARE current_suspended INT;
-  DECLARE current_VIP_status BOOLEAN;
-
-  -- Check the current suspension count and VIP status for the user
-  SELECT count_suspended, VIP_status INTO current_suspended, current_VIP_status
-  FROM `user`
-  WHERE user_ID = p_user_ID;
-
-  -- If the user is a VIP, remove their VIP status but increment count_suspended
-  IF current_VIP_status = TRUE THEN
-    UPDATE `user`
-    SET VIP_status = FALSE, 
-        count_suspended = count_suspended + 1
-    WHERE user_ID = p_user_ID;
-
-  -- If the user is not a VIP, suspend them and increment count_suspended
-  ELSE
-    UPDATE `user`
-    SET is_suspended = TRUE, 
-        count_suspended = count_suspended + 1
-    WHERE user_ID = p_user_ID;
-  END IF;
-  
-  -- Check if the count_suspended is 3 or more after the update
-  IF current_suspended + 1 >= 3 THEN
-    -- Delete the user if count_suspended reaches 3
-    DELETE FROM `user`
-    WHERE user_ID = p_user_ID;
-  END IF;
-END //
-
-DELIMITER ;
 
 -- Code for "superuser" table. Holds superuser information.
 DROP TABLE IF EXISTS `superuser`;
@@ -129,6 +89,7 @@ ALTER TABLE `sell`
 ADD COLUMN `seller_ID` INT NOT NULL, 
 ADD CONSTRAINT `fk_seller`
 FOREIGN KEY (`seller_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE;
+ALTER TABLE `sell` ADD COLUMN `current_bid` DECIMAL(10, 2) DEFAULT 0.00;
 
 -- Code for "purchases" table. Records who bought what.
 DROP TABLE IF EXISTS `transactions`;
@@ -140,6 +101,24 @@ CREATE TABLE `transactions` (
     FOREIGN KEY (`customer_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE
 );
 
+-- Code for "bid" table. Stores bids.
+DROP TABLE IF EXISTS `bid`;
+
+CREATE TABLE `bid` (
+  `bid_ID` int NOT NULL AUTO_INCREMENT,
+  `user_ID` int NOT NULL,
+  `sell_ID` int NOT NULL,   -- Changed from auction_ID to sell_ID
+  `bid_amount` DECIMAL(10, 2) NOT NULL, -- Bids should be in decimal format to accommodate cents
+  `bid_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Track when the bid was placed
+  PRIMARY KEY (`bid_ID`),
+  FOREIGN KEY (`user_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE, 
+  FOREIGN KEY (`sell_ID`) REFERENCES `sell`(`sell_ID`) ON DELETE CASCADE
+);
+
+-- Procedures --
+
+-- Makes a user a VIP if the necessary conditions are true.
+DROP PROCEDURE IF EXISTS set_vip_status;
 DELIMITER //
 
 CREATE PROCEDURE set_vip_status(IN p_user_ID INT)
@@ -176,14 +155,55 @@ BEGIN
     UPDATE `user`
     SET VIP_status = TRUE
     WHERE user_ID = p_user_ID;
-  ELSE
-    -- If not eligible, do nothing or you can add an optional message or flag
-    SELECT 'User does not meet VIP criteria' AS status;
   END IF;
 END //
 
 DELIMITER ;
 
+-- Handles suspension of users.
+DELIMITER //
+
+CREATE PROCEDURE suspend_user_if_criteria_met(IN p_user_ID INT)
+BEGIN
+    DECLARE item_count INT DEFAULT 0;
+    DECLARE user_rating FLOAT;
+    DECLARE suspension_count INT;
+
+    -- Count the total number of items sold or rented by the user that were bought/rented (exist in transactions)
+    SELECT COUNT(DISTINCT s.item_ID) + COUNT(DISTINCT r.item_ID) INTO item_count
+    FROM sell s
+    LEFT JOIN transactions t1 ON s.item_ID = t1.transaction_ID
+    LEFT JOIN rent r ON r.item_ID = t1.transaction_ID
+    WHERE (s.seller_ID = p_user_ID OR r.renter_ID = p_user_ID)
+      AND t1.transaction_ID IS NOT NULL;  -- Only count if the item is bought/rented
+
+    -- Get the user's rating
+    SELECT rating INTO user_rating
+    FROM `user`
+    WHERE user_ID = p_user_ID;
+
+    -- Check if the user meets the suspension criteria
+    IF item_count >= 3 AND (user_rating < 2.0 OR user_rating > 4.0) THEN
+        -- Update the user: set is_suspended to TRUE and increment count_suspended
+        UPDATE `user`
+        SET is_suspended = TRUE, 
+            count_suspended = count_suspended + 1
+        WHERE user_ID = p_user_ID;
+
+        -- Get the updated suspension count for the user
+        SELECT count_suspended INTO suspension_count
+        FROM `user`
+        WHERE user_ID = p_user_ID;
+
+        -- If the suspension count is 3 or more, delete the user from the user table
+        IF suspension_count >= 3 THEN
+            DELETE FROM `user`
+            WHERE user_ID = p_user_ID;
+        END IF;
+    END IF;
+END //
+
+DELIMITER ;
 
 -- Code for "bid" table. Stores top bids on a certain item. ( NEEDS CHANGES )
 -- DROP TABLE IF EXISTS `bid`;
@@ -257,4 +277,9 @@ DELIMITER ;
 -- );
 
 -- SELECT * FROM `user`;
+-- SELECT * FROM `item`;
 -- SELECT * from `sell`;
+-- SELECT * FROM `bid`;
+
+-- SET SQL_SAFE_UPDATES = 0;
+-- DROP DATABASE `ebid_proj`;
