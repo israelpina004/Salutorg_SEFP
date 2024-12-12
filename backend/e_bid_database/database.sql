@@ -29,6 +29,9 @@ CREATE TABLE `user` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 ALTER TABLE user
 ADD COLUMN is_loggedin BOOLEAN DEFAULT FALSE;
+ALTER TABLE user
+ADD COLUMN registration_date DATETIME DEFAULT current_timestamp;
+
 -- Code for "superuser" table. Holds superuser information.
 DROP TABLE IF EXISTS `superuser`;
 CREATE TABLE `superuser` (
@@ -41,6 +44,7 @@ CREATE TABLE `superuser` (
   `last_active` datetime NOT NULL,
   PRIMARY KEY (`admin_ID`)
 );
+
 -- Code for "item" table. Contains information for each item listed on the website.
 DROP TABLE IF EXISTS `item`;
 CREATE TABLE `item` (
@@ -52,6 +56,7 @@ CREATE TABLE `item` (
   `image` LONGBLOB,
   PRIMARY KEY (`item_ID`)
 );
+
 -- Code for "rent" table. Holds information about items posted for rent.
 DROP TABLE IF EXISTS `rent`;
 CREATE TABLE `rent` (
@@ -64,6 +69,7 @@ CREATE TABLE `rent` (
 ALTER TABLE `rent`
 ADD COLUMN `renter_ID` INT NOT NULL,
   ADD CONSTRAINT `fk_renter` FOREIGN KEY (`renter_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE;
+
 -- Code for "sell" table. Holds information about items posted for sale.
 DROP TABLE IF EXISTS `sell`;
 CREATE TABLE `sell` (
@@ -77,17 +83,21 @@ CREATE TABLE `sell` (
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 ALTER TABLE `sell`
 ADD COLUMN `seller_ID` INT NOT NULL,
-  ADD CONSTRAINT `fk_seller` FOREIGN KEY (`seller_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE;
+ADD CONSTRAINT `fk_seller` FOREIGN KEY (`seller_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE;
 ALTER TABLE `sell`
 ADD COLUMN `current_bid` DECIMAL(10, 2) DEFAULT 0.00;
+
 -- Code for "purchases" table. Records who bought what.
 DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE `transactions` (
   `transaction_ID` INT NOT NULL AUTO_INCREMENT,
   `customer_ID` INT NOT NULL,
+  `vendor_ID` INT NOT NULL,
   PRIMARY KEY (`transaction_ID`),
-  FOREIGN KEY (`customer_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE
+  FOREIGN KEY (`customer_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE,
+  FOREIGN KEY (`vendor_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE
 );
+
 -- Code for "bid" table. Stores bids.
 DROP TABLE IF EXISTS `bid`;
 CREATE TABLE `bid` (
@@ -103,83 +113,90 @@ CREATE TABLE `bid` (
   FOREIGN KEY (`user_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE,
   FOREIGN KEY (`sell_ID`) REFERENCES `sell`(`sell_ID`) ON DELETE CASCADE
 );
+
 -- Procedures --
 -- Makes a user a VIP if the necessary conditions are true.
 DROP PROCEDURE IF EXISTS set_vip_status;
-DELIMITER // CREATE PROCEDURE set_vip_status(IN p_user_ID INT) BEGIN
-DECLARE current_balance DECIMAL(10, 2);
-DECLARE sold_items INT;
-DECLARE bought_items INT;
-DECLARE current_suspended INT;
-DECLARE total_transactions INT;
--- Step 1: Get the current balance of the user
-SELECT balance INTO current_balance
-FROM `user`
-WHERE user_ID = p_user_ID;
--- Step 2: Get the count of items sold by the user
-SELECT COUNT(*) INTO sold_items
-FROM `sell`
-WHERE seller_ID = p_user_ID;
--- Step 3: Get the count of items bought by the user
-SELECT COUNT(*) INTO bought_items
-FROM `transactions`
-WHERE customer_ID = p_user_ID;
--- Step 4: Get the count_suspended for the user
-SELECT count_suspended INTO current_suspended
-FROM `user`
-WHERE user_ID = p_user_ID;
--- Step 5: Check if the user meets the criteria
-IF current_balance > 5000
-AND (sold_items + bought_items) > 5
-AND current_suspended = 0 THEN -- Step 6: Set the user's VIP status to TRUE
-UPDATE `user`
-SET VIP_status = TRUE
-WHERE user_ID = p_user_ID;
-END IF;
+
+DELIMITER // 
+
+CREATE PROCEDURE set_vip_status(IN p_user_ID INT) BEGIN
+	DECLARE current_balance DECIMAL(10, 2);
+	DECLARE sold_items INT;
+	DECLARE bought_items INT;
+	DECLARE current_suspended INT;
+	DECLARE total_transactions INT;
+	-- Step 1: Get the current balance of the user
+	SELECT balance INTO current_balance
+	FROM `user`
+	WHERE user_ID = p_user_ID;
+	-- Step 2: Get the count of items sold by the user
+	SELECT COUNT(*) INTO sold_items
+	FROM `sell`
+	WHERE seller_ID = p_user_ID;
+	-- Step 3: Get the count of items bought by the user
+	SELECT COUNT(*) INTO bought_items
+	FROM `transactions`
+	WHERE customer_ID = p_user_ID;
+	-- Step 4: Get the count_suspended for the user
+	SELECT count_suspended INTO current_suspended
+	FROM `user`
+	WHERE user_ID = p_user_ID;
+	-- Step 5: Check if the user meets the criteria
+	IF current_balance > 5000
+	AND (sold_items + bought_items) > 5
+	AND current_suspended = 0 THEN -- Step 6: Set the user's VIP status to TRUE
+		UPDATE `user`
+		SET VIP_status = TRUE
+		WHERE user_ID = p_user_ID;
+	END IF;
 END // DELIMITER;
+
 -- Handles suspension of users.
-DELIMITER // CREATE PROCEDURE suspend_user_if_criteria_met(IN p_user_ID INT) BEGIN
-DECLARE item_count INT DEFAULT 0;
-DECLARE user_rating FLOAT;
-DECLARE suspension_count INT;
--- Count the total number of items sold or rented by the user that were bought/rented (exist in transactions)
-SELECT COUNT(DISTINCT s.item_ID) + COUNT(DISTINCT r.item_ID) INTO item_count
-FROM sell s
-  LEFT JOIN transactions t1 ON s.item_ID = t1.transaction_ID
-  LEFT JOIN rent r ON r.item_ID = t1.transaction_ID
-WHERE (
-    s.seller_ID = p_user_ID
-    OR r.renter_ID = p_user_ID
-  )
-  AND t1.transaction_ID IS NOT NULL;
--- Only count if the item is bought/rented
--- Get the user's rating
-SELECT rating INTO user_rating
-FROM `user`
-WHERE user_ID = p_user_ID;
--- Check if the user meets the suspension criteria
-IF item_count >= 3
-AND (
-  user_rating < 2.0
-  OR user_rating > 4.0
-) THEN -- Update the user: set is_suspended to TRUE and increment count_suspended
-UPDATE `user`
-SET is_suspended = TRUE,
-  count_suspended = count_suspended + 1
-WHERE user_ID = p_user_ID;
--- Get the updated suspension count for the user
-SELECT count_suspended INTO suspension_count
-FROM `user`
-WHERE user_ID = p_user_ID;
--- If the suspension count is 3 or more, delete the user from the user table
-IF suspension_count >= 3 THEN
-DELETE FROM `user`
-WHERE user_ID = p_user_ID;
-END IF;
-END IF;
-END // DELIMITER;
-ALTER TABLE user
-ADD COLUMN registration_date DATETIME DEFAULT current_timestamp;
+DROP PROCEDURE IF EXISTS suspend_user_if_criteria_met;
+DELIMITER // 
+
+CREATE PROCEDURE suspend_user_if_criteria_met(IN p_user_ID INT) BEGIN
+	DECLARE item_count INT DEFAULT 0;
+	DECLARE user_rating FLOAT;
+	DECLARE suspension_count INT;
+	-- Count the total number of items sold or rented by the user that were bought/rented (exist in transactions)
+	SELECT COUNT(DISTINCT s.item_ID) + COUNT(DISTINCT r.item_ID) INTO item_count
+	FROM sell s
+	  LEFT JOIN transactions t1 ON s.item_ID = t1.transaction_ID
+	  LEFT JOIN rent r ON r.item_ID = t1.transaction_ID
+	WHERE (
+		s.seller_ID = p_user_ID
+		OR r.renter_ID = p_user_ID
+	  )
+	  AND t1.transaction_ID IS NOT NULL;
+	-- Only count if the item is bought/rented
+	-- Get the user's rating
+	SELECT rating INTO user_rating
+	FROM `user`
+	WHERE user_ID = p_user_ID;
+	-- Check if the user meets the suspension criteria
+	IF item_count >= 3
+	AND (
+	  user_rating < 2.0
+	  OR user_rating > 4.0
+	) THEN -- Update the user: set is_suspended to TRUE and increment count_suspended
+	UPDATE `user`
+	SET is_suspended = TRUE,
+	  count_suspended = count_suspended + 1
+	WHERE user_ID = p_user_ID;
+	-- Get the updated suspension count for the user
+	SELECT count_suspended INTO suspension_count
+	FROM `user`
+	WHERE user_ID = p_user_ID;
+	-- If the suspension count is 3 or more, delete the user from the user table
+	IF suspension_count >= 3 THEN
+		DELETE FROM `user`
+		WHERE user_ID = p_user_ID;
+	END IF;
+	END IF;
+END //
+
 -- Code for "bid" table. Stores top bids on a certain item. ( NEEDS CHANGES )
 -- DROP TABLE IF EXISTS `bid`;
 -- CREATE TABLE `bid` (

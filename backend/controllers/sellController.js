@@ -82,6 +82,43 @@ const insertSellItem = (req, res) => {
   });
 };
 
+// const getSellItems = (req, res) => {
+//   const sql = `
+//     SELECT 
+//       item.item_ID AS id, 
+//       item.name, 
+//       item.description, 
+//       item.item_condition, 
+//       item.category, 
+//       item.image, 
+//       sell.starting_price AS price, 
+//       sell.deadline
+//     FROM 
+//       item
+//     INNER JOIN 
+//       sell ON item.item_ID = sell.item_ID;
+//   `;
+
+//   db.query(sql, (err, results) => {
+//     if (err) {
+//       console.error("Database error:", err.message);
+//       return res.status(500).json({ error: "Failed to fetch items" });
+//     }
+
+//     const itemsWithBase64 = results.map((item) => {
+//       if (item.image) {
+//         item.image = item.image.toString("base64");
+//       }
+//       return item;
+//     });
+
+//     res.status(200).json({
+//       message: itemsWithBase64.length === 0 ? "No items found" : "Successfully fetched items",
+//       result: itemsWithBase64,
+//     });
+//   });
+// };
+
 const getSellItems = (req, res) => {
   const sql = `
     SELECT 
@@ -92,6 +129,7 @@ const getSellItems = (req, res) => {
       item.category, 
       item.image, 
       sell.starting_price AS price, 
+      sell.current_bid AS topBid,  -- Add this line to select current_bid
       sell.deadline
     FROM 
       item
