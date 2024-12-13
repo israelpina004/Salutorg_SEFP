@@ -19,25 +19,40 @@ const RatingPopup = ({ show, onClose, onSubmitRating, item }) => {
         setRating(value); // Set the selected star rating
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (rating) {
-            let message = '';
-
-            if (rating == 1) {
-                message = "We're sorry about your experience."
+            try {
+                const response = await fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/updaterating`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        rating: rating,
+                        userId: item.seller_id, // Assuming each purchase has a seller_id
+                    }),
+                });
+    
+                const data = await response.json();
+    
+                console.log('Response status:', response.status); // Add this
+                console.log('Response data:', data); // Add this
+    
+                if (data.success) {
+                    alert(`You rated ${rating} stars. ${rating === 1 ? "We're sorry about your experience." : "Thank you!"}`);
+                    onClose();
+                    setRating(null); // Reset the selected stars
+                } else {
+                    alert("Failed to submit rating. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error submitting rating:", error);
+                alert("There was an error submitting your rating.");
             }
-            else {
-                message = "Thank you!"
-            }
-
-            alert(`You rated ${rating} stars. ${message}`);
-            onClose(); // Close the popup after submitting
-            setRating(null); // Resets stars selected after popup closes
-        }
-        else {
+        } else {
             alert("You haven't selected a rating!");
         }
     };
+    
+    
 
     const handleClose = () => {
         onClose();

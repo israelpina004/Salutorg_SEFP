@@ -69,19 +69,19 @@ ADD COLUMN `renter_ID` INT NOT NULL,
 -- Code for "sell" table. Holds information about items posted for sale.
 DROP TABLE IF EXISTS `sell`;
 CREATE TABLE `sell` (
-  `sell_ID` INT NOT NULL AUTO_INCREMENT,
-  `item_ID` INT NOT NULL,
-  `starting_price` DECIMAL(10, 2) NOT NULL,
-  -- `starting_bid` DECIMAL(10, 2) NOT NULL,
-  `deadline` DATE NOT NULL,
-  PRIMARY KEY (`sell_ID`),
-  FOREIGN KEY (`item_ID`) REFERENCES `item`(`item_ID`) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
-ALTER TABLE `sell`
-ADD COLUMN `seller_ID` INT NOT NULL,
-  ADD CONSTRAINT `fk_seller` FOREIGN KEY (`seller_ID`) REFERENCES `user`(`user_ID`) ON DELETE CASCADE;
-ALTER TABLE `sell`
-ADD COLUMN `current_bid` DECIMAL(10, 2) DEFAULT 0.00;
+    `sell_ID` int NOT NULL AUTO_INCREMENT,
+    `item_ID` int NOT NULL,
+    `starting_price` decimal(10, 2) NOT NULL,
+    `deadline` date NOT NULL,
+    `seller_ID` int NOT NULL,
+    `current_bid` decimal(10, 2) DEFAULT '0.00',
+    `status` enum('active', 'sold') DEFAULT 'active',
+    PRIMARY KEY (`sell_ID`),
+    KEY `item_ID` (`item_ID`),
+    KEY `fk_seller` (`seller_ID`),
+    CONSTRAINT `fk_seller` FOREIGN KEY (`seller_ID`) REFERENCES `user` (`user_ID`) ON DELETE CASCADE,
+    CONSTRAINT `sell_ibfk_1` FOREIGN KEY (`item_ID`) REFERENCES `item` (`item_ID`) ON DELETE CASCADE
+);
 -- Code for "transactions" table. Records who bought what.
 DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE `transactions` (
