@@ -3,33 +3,31 @@ import { Link } from "react-router-dom";
 import Logo2 from "../../Assets/Images/Logo-5.svg";
 
 const Profile = () => {
-    const [user, setUser] = useState({
-        username: "",
-        email: "",
-        rating: null,
-    });
-
-    const [error, setError] = useState("");
+    const [username, setUsername] = useState(""); // State to store username
+    const [registrationDate, setRegistrationDate] = useState(""); // State to store registration date
+    const [rating, setRating] = useState(null); // State to store user rating
+    const [VIPStatus, setVIPStatus] = useState(false); // State to store VIP status
 
     // Fetch logged-in user data
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await fetch("/getLoggedInUser");
-                const data = await response.json();
-
-                if (data.success) {
-                    setUser(data.loggedInUser);
-                } else {
-                    setError(data.message || "Failed to fetch user data.");
+        fetch(`http://localhost:${process.env.REACT_APP_API_PORT}/api/getlogin`, {
+            method: "POST",
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Failed to fetch user data");
                 }
-            } catch (err) {
-                console.error("Error fetching user data:", err);
-                setError("An error occurred while fetching user data.");
-            }
-        };
-
-        fetchUserData();
+                return res.json();
+            })
+            .then((data) => {
+                setUsername(data.loggedInUser.username);
+                setRegistrationDate(data.loggedInUser.registration_date);
+                setRating(data.loggedInUser.rating);
+                setVIPStatus(data.loggedInUser.VIP);
+            })
+            .catch((err) => {
+                console.error("Error fetching profile data:", err);
+            });
     }, []);
 
     return (
@@ -46,7 +44,9 @@ const Profile = () => {
                 <div className="tabs-container w-100 p-3 border-bottom border-gray-300">
                     <ul className="nav nav-tabs justify-content-center">
                         <li className="nav-item">
-                            <span className="nav-link active">Account</span>
+                            <Link className="nav-link active" to="/profile">
+                                Account
+                            </Link>
                         </li>
                         <li className="nav-item">
                             <Link className="nav-link" to="/payment-details">
@@ -63,21 +63,18 @@ const Profile = () => {
                         <div className="col-md-6 mb-4">
                             <div className="card shadow-sm p-4">
                                 <h5>About You</h5>
-                                {error ? (
-                                    <p style={{ color: "red" }}>{error}</p>
-                                ) : (
-                                    <>
-                                        <p>
-                                            <b>Name:</b> {user.username}
-                                        </p>
-                                        <p>
-                                            <b>Email:</b> {user.email}
-                                        </p>
-                                        <p>
-                                            <b>Rating:</b> {user.rating !== null ? user.rating : "No rating yet"}
-                                        </p>
-                                    </>
-                                )}
+                                <p>
+                                    <strong>Name:</strong> {username}
+                                </p>
+                                <p>
+                                    <strong>Member Since:</strong> {registrationDate}
+                                </p>
+                                <p>
+                                    <strong>Rating:</strong> {rating !== null ? rating : "No rating yet"}
+                                </p>
+                                <p>
+                                    <strong>VIP status:</strong> {VIPStatus ? "VIP" : "Standard Member"}
+                                </p>
                             </div>
                         </div>
                     </div>
