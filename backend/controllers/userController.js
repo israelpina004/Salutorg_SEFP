@@ -163,32 +163,190 @@ const updateBalance = (req, res) => {
   });
 };
 
-// Updates rating
-const updateRating = (req, res) => {
-  const { sellerId, rating } = req.body; 
-  
-  const findSellerQuery = "SELECT user_ID FROM sell WHERE seller_ID = ?"; 
-  db.query(findSellerQuery, [sellerId], (err, results) => { 
+// Add a comment
+const addComment = (req, res) => {
+  const { userId, username, comment } = req.body;
+
+  const sql = "INSERT INTO comments (userId, username, comment) VALUES (?, ?, ?)";
+  db.query(sql, [userId || null, username, comment], (err, result) => {
     if (err) {
-      console.error("Error finding seller:", err); 
-      return res.status(500).json({ error: "Database error during seller lookup." });
-    } 
-    
-    if (results.length === 0) {
-      return res.status(404).json({ error: "Seller not found." });
-    } 
-    
-    const userId = results[0].user_ID; 
-    
-    const updateRatingQuery = "UPDATE user SET rating = ? WHERE user_ID = ?"; 
-    db.query(updateRatingQuery, [rating, userId], (updateErr, updateResult) => {
-      if (updateErr) {
-        console.error("Error updating seller rating:", updateErr);
-        return res.status(500).json({ error: "Database error during rating update." }); 
-      } 
-      res.json({ success: true, message: "Seller rating updated successfully!" }); 
-    }); 
-  }); 
+      console.error("Error inserting comment:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json({ success: true, message: "Comment added successfully!" });
+  });
+};
+
+// Get all comments
+const getComments = (req, res) => {
+  const sql = "SELECT * FROM comments ORDER BY createdAt DESC";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error fetching comments:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+    res.json(results);
+  });
+};
+
+const acceptBid = async (req, res) => {
+  const item_ID = req.body.id; // Extract item_ID from the request body
+  console.log("Item ID:", item_ID, typeof(item_ID));
+
+  try {
+    // Ensure the item_ID is a valid number
+    if (!item_ID) {
+      throw new Error("Invalid item ID. ID is empty.");
+    }
+
+    if (typeof item_ID !== "number" || isNaN(item_ID)) {
+      throw new Error("Invalid item ID. ID is not a number.");
+    }
+
+    // Query to fetch item and bid details
+    const query = `
+      SELECT 
+        s.seller_ID, 
+        s.current_bid, 
+        s.item_ID, 
+        b.user_ID AS highest_bidder
+      FROM sell s
+      LEFT JOIN bid b ON s.sell_ID = b.sell_ID
+      WHERE s.item_ID = ? 
+      ORDER BY b.bid_amount DESC
+      LIMIT 1;
+    `;
+    console.log("Query to execute:", query);
+    console.log("Parameters:", [item_ID]);
+
+    const [result] = await db.promise().query(query, [item_ID]);
+
+    console.log("Query result:", result);
+
+    const itemDetails = result[0];
+
+    if (!itemDetails) {
+      throw new Error("No bid found for this item.");
+    }
+
+    console.log("Item details retrieved:", itemDetails);
+
+    const { seller_ID, current_bid, item_ID: itemID, highest_bidder } = itemDetails;
+
+    // Validate necessary values
+    if (current_bid === 0.0) {
+      throw new Error("No bids on this item.");
+    }
+    if (!highest_bidder || !seller_ID) {
+      throw new Error("Missing bidder or seller data.");
+    }
+
+    console.log("Inserting transaction with values:", [seller_ID, highest_bidder, itemID]);
+
+    // Start a transaction
+    await db.promise().beginTransaction();
+
+    // Insert transaction without amount column
+    const insertTransactionQuery = `
+      INSERT INTO transactions (vendor_ID, customer_ID, item_ID)
+      VALUES (?, ?, ?);
+    `;
+    const [transactionResult] = await db.promise().query(insertTransactionQuery, [seller_ID, highest_bidder, itemID]);
+
+    if (transactionResult.affectedRows === 0) {
+      throw new Error("Failed to insert transaction.");
+    }
+
+    console.log("Transaction inserted successfully:", transactionResult);
+
+    // Transfer funds to seller and deduct from bidder
+    const transferFundsQuery = `
+      UPDATE \`user\` 
+      SET balance = balance + ? 
+      WHERE user_ID = ?;
+    `;
+
+    const [sellerFundsResult] = await db.promise().query(transferFundsQuery, [current_bid, seller_ID]);
+    const [bidderFundsResult] = await db.promise().query(transferFundsQuery, [-current_bid, highest_bidder]);
+
+    if (sellerFundsResult.affectedRows === 0 || bidderFundsResult.affectedRows === 0) {
+      throw new Error("Failed to update balances.");
+    }
+
+    // Update item status to 'sold' in the sell table
+    const updateStatusQuery = `UPDATE sell SET status = 'sold' WHERE item_ID = ?;`;
+    const [updateResult] = await db.promise().query(updateStatusQuery, [itemID]);
+
+    if (updateResult.affectedRows === 0) {
+      throw new Error("Failed to update item status to 'sold'.");
+    }
+
+    // Commit the transaction
+    await db.promise().commit();
+
+    console.log(`Bid accepted! Item ID: ${itemID}, Seller ID: ${seller_ID}, Customer ID: ${highest_bidder}, Amount: ${current_bid}`);
+    return res.json({ success: true, message: `Bid accepted for item ${itemID}. Transaction completed.` });
+
+  } catch (error) {
+    console.error("Error accepting bid:", error.message);
+    await db.promise().rollback(); // Rollback if anything fails
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+
+const updateRating = (req, res) => {
+  const { userId, rating } = req.body; 
+
+  // Update rating
+  const sql = "UPDATE user SET rating = ? WHERE user_ID = ?";
+  db.query(sql, [rating, userId], (err, result) => {
+    if (err) {
+      console.error("Error updating rating:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    res.json({ success: true, message: "Rating updated successfully!" });
+  });
+};
+
+
+const getPurchases = (req, res) => {
+  const { customerId } = req.body;
+
+  if (!customerId) {
+    console.error("Customer ID not provided.");
+    return res.status(400).json({ success: false, error: "Customer ID is required." });
+  }
+
+  const query = `
+  SELECT 
+    t.transaction_ID AS id,
+    i.name AS item_name,
+    i.image AS item_image,
+    t.date AS purchase_date,
+    s.starting_price AS price,
+    t.vendor_ID AS seller_id
+  FROM transactions t
+  INNER JOIN item i ON t.item_ID = i.item_ID
+  LEFT JOIN sell s ON i.item_ID = s.item_ID
+  WHERE t.customer_ID = ?
+  ORDER BY t.date DESC;
+`;
+
+  db.query(query, [customerId], (err, results) => {
+    if (err) {
+      console.error("Error fetching purchases:", err.message);
+      return res.status(500).json({ success: false, error: "Database error while fetching purchases." });
+    }
+
+    console.log("Purchases fetched successfully:", results);
+    res.status(200).json({ success: true, purchases: results });
+  });
 };
 
 
@@ -200,5 +358,9 @@ module.exports =
   updateBalance,
   logoutUser,
   getLoggedInUser,
+  addComment, 
+  getComments,
+  acceptBid,
   updateRating,
+  getPurchases,
  };
